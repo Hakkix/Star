@@ -10,11 +10,6 @@ import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // This will be imported from the actual lib/astronomy.ts when created
 // For now, we define example function signatures
-type CelestialCoords = {
-  ra: number; // Right Ascension in hours (0-24)
-  dec: number; // Declination in degrees (-90 to 90)
-};
-
 type CartesianCoords = {
   x: number;
   y: number;
@@ -47,7 +42,6 @@ function raDecToCartesian(
 function calculateLST(date: Date, longitude: number): number {
   // Simplified LST calculation (real implementation will use astronomy-engine)
   const jd = date.getTime() / 86400000 + 2440587.5;
-  const t = (jd - 2451545.0) / 36525;
   const gmst = 280.46061837 + 360.98564736629 * (jd - 2451545.0);
   const lst = (gmst + longitude) % 360;
   return lst;
