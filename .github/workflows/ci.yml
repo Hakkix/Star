@@ -164,27 +164,49 @@ jobs:
     if: always()
     steps:
       - name: Check job results
+        id: checks
+        continue-on-error: true
         run: |
+          failed=0
+
           if [[ "${{ needs.lint.result }}" != "success" ]]; then
-            echo "Lint job failed"
-            exit 1
+            echo "❌ Lint job failed"
+            failed=1
+          else
+            echo "✅ Lint passed"
           fi
+
           if [[ "${{ needs.type-check.result }}" != "success" ]]; then
-            echo "Type check job failed"
-            exit 1
+            echo "❌ Type check job failed"
+            failed=1
+          else
+            echo "✅ Type check passed"
           fi
+
           if [[ "${{ needs.test.result }}" != "success" ]]; then
-            echo "Test job failed"
-            exit 1
+            echo "❌ Test job failed"
+            failed=1
+          else
+            echo "✅ Tests passed"
           fi
+
           if [[ "${{ needs.build.result }}" != "success" ]]; then
-            echo "Build job failed"
-            exit 1
+            echo "❌ Build job failed"
+            failed=1
+          else
+            echo "✅ Build passed"
           fi
-          echo "All quality checks passed!"
+
+          if [[ $failed -eq 1 ]]; then
+            echo "quality_passed=false" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "quality_passed=true" >> $GITHUB_OUTPUT
+            echo "🎉 All quality checks passed!"
+          fi
 
       - name: Post status to PR
-        if: github.event_name == 'pull_request'
+        if: always() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
@@ -201,3 +223,9 @@ jobs:
               repo: context.repo.repo,
               body: `## Quality Gate\n\n${status}\n\n- Lint: ${{ needs.lint.result }}\n- Type Check: ${{ needs.type-check.result }}\n- Tests: ${{ needs.test.result }}\n- Build: ${{ needs.build.result }}`
             });
+
+      - name: Fail job if quality checks failed
+        if: steps.checks.outputs.quality_passed == 'false'
+        run: |
+          echo "Quality gate failed - see details above"
+          exit 1
