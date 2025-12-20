@@ -6,7 +6,7 @@
  * when the coordinate conversion functions are created.
  */
 
-import { describe, test, expect, beforeEach, vi } from 'vitest';
+import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // This will be imported from the actual lib/astronomy.ts when created
 // For now, we define example function signatures
