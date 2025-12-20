@@ -39,7 +39,7 @@ beforeAll(() => {
       return [];
     }
     unobserve() {}
-  } as any;
+  } as unknown as typeof IntersectionObserver;
 });
 
 // Mock ResizeObserver (used by R3F Canvas)
@@ -49,14 +49,14 @@ beforeAll(() => {
     disconnect() {}
     observe() {}
     unobserve() {}
-  } as any;
+  } as unknown as typeof ResizeObserver;
 });
 
 // Suppress console errors in tests (optional, but reduces noise)
 // You can remove this if you want to see all console outputs
 const originalError = console.error;
 beforeAll(() => {
-  console.error = (...args: any[]) => {
+  console.error = (...args: unknown[]) => {
     // Suppress known warnings from React/R3F
     if (
       typeof args[0] === 'string' &&

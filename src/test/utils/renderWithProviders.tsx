@@ -9,6 +9,7 @@ import { ReactElement, ReactNode } from 'react';
  * Custom render function that wraps components with necessary providers
  * Currently just a wrapper, but can be extended with Zustand stores, etc.
  */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   // Add custom options here if needed (e.g., initialStoreState)
 }

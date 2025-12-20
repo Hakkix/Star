@@ -133,7 +133,7 @@ export function mockDeviceOrientation(orientation: MockDeviceOrientation) {
 
   // Add requestPermission to DeviceOrientationEvent if it doesn't exist
   if (typeof DeviceOrientationEvent !== 'undefined') {
-    (DeviceOrientationEvent as any).requestPermission = mockRequestPermission;
+    (DeviceOrientationEvent as { requestPermission?: () => Promise<PermissionState> }).requestPermission = mockRequestPermission;
   }
 
   // Helper to dispatch the event

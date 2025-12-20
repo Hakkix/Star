@@ -89,7 +89,7 @@ export default function LandingPage() {
       stars.push(new Star(canvas.width, canvas.height))
     }
 
-    let speed = 0.5
+    const speed = 0.5
     let animationId: number
 
     const animate = () => {
@@ -162,7 +162,7 @@ export default function LandingPage() {
               </div>
               <h3 className={styles.featureTitle}>Real-time Tracking</h3>
               <p className={styles.featureDescription}>
-                Uses your device's GPS and gyroscope to accurately map celestial objects based on your location and orientation
+                Uses your device&apos;s GPS and gyroscope to accurately map celestial objects based on your location and orientation
               </p>
             </div>
 
@@ -245,7 +245,7 @@ export default function LandingPage() {
               <div className={styles.stepNumber}>1</div>
               <h3 className={styles.stepTitle}>Grant Permissions</h3>
               <p className={styles.stepDescription}>
-                Allow access to your device's location and motion sensors
+                Allow access to your device&apos;s location and motion sensors
               </p>
             </div>
 

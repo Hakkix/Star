@@ -7,7 +7,7 @@
  */
 
 import { describe, test, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@/test/utils/renderWithProviders';
+import { render, screen } from '@/test/utils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
 
 // Example Overlay component (will be implemented in src/components/dom/Overlay.tsx)
