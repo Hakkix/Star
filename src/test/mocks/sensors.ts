@@ -42,11 +42,28 @@ export function mockGeolocation(
     altitudeAccuracy: coords.altitudeAccuracy ?? null,
     heading: coords.heading ?? null,
     speed: coords.speed ?? null,
+    toJSON() {
+      return {
+        latitude: this.latitude,
+        longitude: this.longitude,
+        accuracy: this.accuracy,
+        altitude: this.altitude,
+        altitudeAccuracy: this.altitudeAccuracy,
+        heading: this.heading,
+        speed: this.speed,
+      };
+    },
   };
 
   const position: GeolocationPosition = {
     coords: defaultCoords,
     timestamp: Date.now(),
+    toJSON() {
+      return {
+        coords: this.coords,
+        timestamp: this.timestamp,
+      };
+    },
   };
 
   const mockGetCurrentPosition = vi.fn(
@@ -55,7 +72,7 @@ export function mockGeolocation(
       errorCallback?: PositionErrorCallback
     ) => {
       if (options?.error && errorCallback) {
-        setTimeout(() => errorCallback(options.error), options?.delay ?? 0);
+        setTimeout(() => errorCallback(options.error!), options?.delay ?? 0);
       } else {
         setTimeout(() => successCallback(position), options?.delay ?? 0);
       }
@@ -68,7 +85,7 @@ export function mockGeolocation(
       errorCallback?: PositionErrorCallback
     ) => {
       if (options?.error && errorCallback) {
-        setTimeout(() => errorCallback(options.error), options?.delay ?? 0);
+        setTimeout(() => errorCallback(options.error!), options?.delay ?? 0);
       } else {
         setTimeout(() => successCallback(position), options?.delay ?? 0);
       }
