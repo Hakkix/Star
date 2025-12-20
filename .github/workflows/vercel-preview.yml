@@ -7,6 +7,12 @@ on:
 env:
   NODE_VERSION: '20'
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  deployments: read
+
 jobs:
   preview-smoke-tests:
     name: Smoke Tests on Vercel Preview
@@ -140,6 +146,7 @@ jobs:
             throw new Error('Deployment did not complete in time');
 
       - name: Run Lighthouse CI
+        id: lighthouse
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
@@ -157,24 +164,76 @@ jobs:
             let lighthouseResults = '';
 
             try {
-              // Lighthouse CI saves results to .lighthouseci/
+              // Debug: Log directory contents
+              console.log('Checking for Lighthouse results...');
+
+              if (!fs.existsSync('.lighthouseci')) {
+                throw new Error('.lighthouseci directory not found');
+              }
+
               const files = fs.readdirSync('.lighthouseci');
-              const manifestPath = `.lighthouseci/${files.find(f => f.includes('manifest'))}`;
-              const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+              console.log('Files in .lighthouseci:', files);
 
-              const scores = manifest[0].summary;
-              lighthouseResults = `
-              ## 🏆 Lighthouse Scores
+              // Find manifest file
+              const manifestFile = files.find(f => f.includes('manifest') || f.endsWith('.json'));
+              if (!manifestFile) {
+                throw new Error('No manifest file found');
+              }
 
-              - ⚡ Performance: ${Math.round(scores.performance * 100)}
-              - ♿ Accessibility: ${Math.round(scores.accessibility * 100)}
-              - ✅ Best Practices: ${Math.round(scores['best-practices'] * 100)}
-              - 🔍 SEO: ${Math.round(scores.seo * 100)}
+              const manifestPath = `.lighthouseci/${manifestFile}`;
+              console.log('Reading manifest from:', manifestPath);
 
-              [View Full Report](${manifest[0].url})
-              `;
+              const manifestContent = fs.readFileSync(manifestPath, 'utf8');
+              const manifest = JSON.parse(manifestContent);
+
+              console.log('Manifest structure:', JSON.stringify(manifest, null, 2));
+
+              // Handle different possible manifest structures
+              let results;
+              if (Array.isArray(manifest)) {
+                results = manifest[0];
+              } else if (manifest.results) {
+                results = manifest.results[0];
+              } else {
+                results = manifest;
+              }
+
+              // Extract scores (handle both summary and lhr formats)
+              let scores;
+              if (results.summary) {
+                scores = results.summary;
+              } else if (results.lhr && results.lhr.categories) {
+                const cats = results.lhr.categories;
+                scores = {
+                  performance: cats.performance?.score,
+                  accessibility: cats.accessibility?.score,
+                  'best-practices': cats['best-practices']?.score,
+                  seo: cats.seo?.score
+                };
+              } else {
+                throw new Error('Could not find scores in manifest');
+              }
+
+              // Get report URL
+              const reportUrl = results.url || results.reportUrl || 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+
+              const perfScore = Math.round((scores.performance || 0) * 100);
+              const a11yScore = Math.round((scores.accessibility || 0) * 100);
+              const bpScore = Math.round((scores['best-practices'] || 0) * 100);
+              const seoScore = Math.round((scores.seo || 0) * 100);
+
+              lighthouseResults = '## 🏆 Lighthouse Scores\n\n';
+              lighthouseResults += '- ⚡ Performance: ' + perfScore + '\n';
+              lighthouseResults += '- ♿ Accessibility: ' + a11yScore + '\n';
+              lighthouseResults += '- ✅ Best Practices: ' + bpScore + '\n';
+              lighthouseResults += '- 🔍 SEO: ' + seoScore + '\n\n';
+              lighthouseResults += '[View Full Report](' + reportUrl + ')';
+
             } catch (error) {
-              lighthouseResults = '⚠️ Could not parse Lighthouse results';
+              console.error('Error parsing Lighthouse results:', error);
+              lighthouseResults = '⚠️ Could not parse Lighthouse results\n\n';
+              lighthouseResults += 'Error: ' + error.message + '\n\n';
+              lighthouseResults += 'Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.';
             }
 
             github.rest.issues.createComment({
