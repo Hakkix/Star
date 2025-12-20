@@ -8,6 +8,7 @@
 
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
+import { useState, useEffect } from 'react';
 import {
   mockGeolocation,
   createGeolocationError,
@@ -28,7 +29,7 @@ type GPSState = {
  * This will be created in src/hooks/useGPS.ts
  */
 function useGPS(): GPSState {
-  const [state, setState] = React.useState({
+  const [state, setState] = useState<GPSState>({
     latitude: null,
     longitude: null,
     accuracy: null,
@@ -36,9 +37,9 @@ function useGPS(): GPSState {
     loading: true,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!navigator.geolocation) {
-      setState((prev: GPSState) => ({
+      setState((prev) => ({
         ...prev,
         loading: false,
         error: createGeolocationError(2, 'Geolocation not supported'),
@@ -57,7 +58,7 @@ function useGPS(): GPSState {
         });
       },
       (error) => {
-        setState((prev: GPSState) => ({
+        setState((prev) => ({
           ...prev,
           error,
           loading: false,
@@ -68,12 +69,6 @@ function useGPS(): GPSState {
 
   return state;
 }
-
-// Mock React for the example (in real tests, React is imported)
-const React = {
-  useState: vi.fn((initial: GPSState): [GPSState, (value: GPSState | ((prev: GPSState) => GPSState)) => void] => [initial, vi.fn()]),
-  useEffect: vi.fn((fn: () => void, _deps?: unknown[]) => fn()),
-};
 
 describe('useGPS Hook', () => {
   beforeEach(() => {

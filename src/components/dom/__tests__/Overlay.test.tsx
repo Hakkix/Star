@@ -24,14 +24,7 @@ function Overlay({
   showLoading = false,
   errorMessage = null,
 }: OverlayProps) {
-  if (showLoading) {
-    return (
-      <div role="status" aria-live="polite">
-        <p>Loading star map...</p>
-      </div>
-    );
-  }
-
+  // Error takes highest precedence
   if (errorMessage) {
     return (
       <div role="alert" aria-live="assertive">
@@ -40,6 +33,16 @@ function Overlay({
     );
   }
 
+  // Loading takes second precedence
+  if (showLoading) {
+    return (
+      <div role="status" aria-live="polite">
+        <p>Loading star map...</p>
+      </div>
+    );
+  }
+
+  // Permission request UI
   if (!permissionGranted) {
     return (
       <div>
@@ -217,6 +220,8 @@ describe('Overlay Component - iOS Specific', () => {
     render(<Overlay permissionGranted={false} />);
 
     // iOS 13+ requires explicit permission for DeviceOrientationEvent
-    expect(screen.getByText(/device orientation/i)).toBeInTheDocument();
+    const elements = screen.getAllByText(/device orientation/i);
+    expect(elements.length).toBeGreaterThan(0);
+    expect(elements[0]).toBeInTheDocument();
   });
 });
