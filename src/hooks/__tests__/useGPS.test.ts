@@ -28,7 +28,7 @@ type GPSState = {
  * This will be created in src/hooks/useGPS.ts
  */
 function useGPS(): GPSState {
-  const [state, setState] = React.useState<GPSState>({
+  const [state, setState] = React.useState({
     latitude: null,
     longitude: null,
     accuracy: null,
@@ -38,7 +38,7 @@ function useGPS(): GPSState {
 
   React.useEffect(() => {
     if (!navigator.geolocation) {
-      setState((prev) => ({
+      setState((prev: GPSState) => ({
         ...prev,
         loading: false,
         error: createGeolocationError(2, 'Geolocation not supported'),
@@ -57,7 +57,7 @@ function useGPS(): GPSState {
         });
       },
       (error) => {
-        setState((prev) => ({
+        setState((prev: GPSState) => ({
           ...prev,
           error,
           loading: false,
@@ -71,8 +71,8 @@ function useGPS(): GPSState {
 
 // Mock React for the example (in real tests, React is imported)
 const React = {
-  useState: vi.fn((initial) => [initial, vi.fn()]),
-  useEffect: vi.fn((fn) => fn()),
+  useState: vi.fn((initial: GPSState): [GPSState, (value: GPSState | ((prev: GPSState) => GPSState)) => void] => [initial, vi.fn()]),
+  useEffect: vi.fn((fn: () => void, _deps?: unknown[]) => fn()),
 };
 
 describe('useGPS Hook', () => {
