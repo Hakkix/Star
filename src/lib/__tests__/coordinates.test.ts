@@ -1,51 +1,10 @@
 /**
- * Example unit tests for coordinate conversion functions
- * These tests demonstrate testing astronomy calculations
- *
- * NOTE: These are template tests. Actual implementation will be added
- * when the coordinate conversion functions are created.
+ * Unit tests for coordinate conversion functions
+ * These tests verify astronomy calculations and coordinate conversions
  */
 
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-
-// This will be imported from the actual lib/astronomy.ts when created
-// For now, we define example function signatures
-type CartesianCoords = {
-  x: number;
-  y: number;
-  z: number;
-};
-
-/**
- * Example function to convert RA/Dec to Cartesian coordinates
- * This will be implemented in src/lib/astronomy.ts
- */
-function raDecToCartesian(
-  ra: number,
-  dec: number,
-  radius: number = 1000
-): CartesianCoords {
-  const raRad = ((ra * 15) * Math.PI) / 180; // hours → degrees → radians
-  const decRad = (dec * Math.PI) / 180;
-
-  const x = radius * Math.cos(decRad) * Math.cos(raRad);
-  const y = radius * Math.sin(decRad);
-  const z = radius * Math.cos(decRad) * Math.sin(raRad);
-
-  return { x, y, z };
-}
-
-/**
- * Example function to calculate Local Sidereal Time
- * This will be implemented in src/lib/astronomy.ts
- */
-function calculateLST(date: Date, longitude: number): number {
-  // Simplified LST calculation (real implementation will use astronomy-engine)
-  const jd = date.getTime() / 86400000 + 2440587.5;
-  const gmst = 280.46061837 + 360.98564736629 * (jd - 2451545.0);
-  const lst = (gmst + longitude) % 360;
-  return lst;
-}
+import { raDecToCartesian, calculateLST } from '@/lib/astronomy';
 
 describe('Coordinate Conversion Functions', () => {
   describe('raDecToCartesian', () => {
