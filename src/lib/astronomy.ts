@@ -3,6 +3,8 @@
  * Handles coordinate conversions and celestial calculations
  */
 
+import * as Astronomy from 'astronomy-engine';
+
 /**
  * Cartesian coordinates in 3D space
  */
@@ -10,6 +12,25 @@ export type CartesianCoords = {
   x: number;
   y: number;
   z: number;
+};
+
+/**
+ * Observer location on Earth
+ */
+export type ObserverLocation = {
+  latitude: number;   // degrees (-90 to 90)
+  longitude: number;  // degrees (-180 to 180)
+  altitude?: number;  // meters above sea level (default 0)
+};
+
+/**
+ * Celestial body position data
+ */
+export type PlanetPosition = {
+  name: string;       // Body name (e.g., "Mars")
+  ra: number;         // Right Ascension in hours (0-24)
+  dec: number;        // Declination in degrees (-90 to 90)
+  dist: number;       // Distance from Earth in AU
 };
 
 /**
@@ -67,4 +88,69 @@ export function calculateLST(date: Date, longitude: number): number {
   const lst = (gmst + longitude) % 360;
 
   return lst;
+}
+
+/**
+ * Gets the current position of a celestial body (planet, moon, or sun)
+ * using the astronomy-engine library
+ *
+ * @param bodyName - Name of the celestial body (e.g., "Mars", "Jupiter", "Moon", "Sun")
+ * @param date - The date/time for which to calculate the position
+ * @param observer - Observer's location on Earth (latitude, longitude, altitude)
+ * @returns Planet position with RA, Dec, distance, and name
+ *
+ * @example
+ * ```typescript
+ * const observer = { latitude: 40.7128, longitude: -74.0060, altitude: 10 };
+ * const mars = getPlanetPosition('Mars', new Date(), observer);
+ * console.log(`Mars RA: ${mars.ra}h, Dec: ${mars.dec}°, Distance: ${mars.dist} AU`);
+ * ```
+ *
+ * Supported bodies:
+ * - Planets: Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune
+ * - Other: Sun, Moon, Pluto
+ *
+ * Note: Earth is not supported (observer is on Earth)
+ */
+export function getPlanetPosition(
+  bodyName: string,
+  date: Date,
+  observer: ObserverLocation
+): PlanetPosition {
+  // Validate body name
+  const validBodies = [
+    'Sun', 'Moon', 'Mercury', 'Venus', 'Mars',
+    'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'
+  ];
+
+  if (!validBodies.includes(bodyName)) {
+    throw new Error(
+      `Invalid body name "${bodyName}". Must be one of: ${validBodies.join(', ')}`
+    );
+  }
+
+  // Create Observer object (altitude in meters, default to 0)
+  const astroObserver = new Astronomy.Observer(
+    observer.latitude,
+    observer.longitude,
+    observer.altitude ?? 0
+  );
+
+  // Calculate equatorial coordinates
+  // ofdate=true: coordinates relative to Earth's equator at the given date
+  // aberration=true: account for aberration of light (apparent position)
+  const equatorial = Astronomy.Equator(
+    bodyName as Astronomy.Body,
+    date,
+    astroObserver,
+    true,  // ofdate
+    true   // aberration
+  );
+
+  return {
+    name: bodyName,
+    ra: equatorial.ra,      // Right Ascension in hours (0-24)
+    dec: equatorial.dec,    // Declination in degrees (-90 to 90)
+    dist: equatorial.dist,  // Distance in AU
+  };
 }

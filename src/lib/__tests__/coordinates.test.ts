@@ -4,7 +4,7 @@
  */
 
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import { raDecToCartesian, calculateLST } from '@/lib/astronomy';
+import { raDecToCartesian, calculateLST, getPlanetPosition } from '@/lib/astronomy';
 
 describe('Coordinate Conversion Functions', () => {
   describe('raDecToCartesian', () => {
@@ -177,5 +177,186 @@ describe('Star Data Validation', () => {
     const invalidDec = 95; // Dec must be -90 to 90
 
     expect(Math.abs(invalidDec)).toBeGreaterThan(90);
+  });
+});
+
+describe('getPlanetPosition', () => {
+  const observer = {
+    latitude: 40.7128,   // New York City
+    longitude: -74.0060,
+    altitude: 10
+  };
+
+  beforeEach(() => {
+    // Use fake timers for deterministic tests
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  test('returns valid position for Mars', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    const result = getPlanetPosition('Mars', date, observer);
+
+    expect(result.name).toBe('Mars');
+    expect(result.ra).toBeGreaterThanOrEqual(0);
+    expect(result.ra).toBeLessThan(24);
+    expect(result.dec).toBeGreaterThanOrEqual(-90);
+    expect(result.dec).toBeLessThanOrEqual(90);
+    expect(result.dist).toBeGreaterThan(0);
+  });
+
+  test('returns valid position for Jupiter', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    const result = getPlanetPosition('Jupiter', date, observer);
+
+    expect(result.name).toBe('Jupiter');
+    expect(result.ra).toBeGreaterThanOrEqual(0);
+    expect(result.ra).toBeLessThan(24);
+    expect(result.dec).toBeGreaterThanOrEqual(-90);
+    expect(result.dec).toBeLessThanOrEqual(90);
+    expect(result.dist).toBeGreaterThan(0);
+  });
+
+  test('returns valid position for the Moon', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    const result = getPlanetPosition('Moon', date, observer);
+
+    expect(result.name).toBe('Moon');
+    expect(result.ra).toBeGreaterThanOrEqual(0);
+    expect(result.ra).toBeLessThan(24);
+    expect(result.dec).toBeGreaterThanOrEqual(-90);
+    expect(result.dec).toBeLessThanOrEqual(90);
+    expect(result.dist).toBeGreaterThan(0);
+    // Moon should be close to Earth (< 0.01 AU)
+    expect(result.dist).toBeLessThan(0.01);
+  });
+
+  test('returns valid position for the Sun', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    const result = getPlanetPosition('Sun', date, observer);
+
+    expect(result.name).toBe('Sun');
+    expect(result.ra).toBeGreaterThanOrEqual(0);
+    expect(result.ra).toBeLessThan(24);
+    expect(result.dec).toBeGreaterThanOrEqual(-90);
+    expect(result.dec).toBeLessThanOrEqual(90);
+    // Sun should be approximately 1 AU away
+    expect(result.dist).toBeCloseTo(1.0, 1);
+  });
+
+  test('supports all major planets', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    const planets = ['Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'];
+
+    planets.forEach(planet => {
+      const result = getPlanetPosition(planet, date, observer);
+      expect(result.name).toBe(planet);
+      expect(result.ra).toBeGreaterThanOrEqual(0);
+      expect(result.ra).toBeLessThan(24);
+    });
+  });
+
+  test('throws error for invalid body name', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    expect(() => {
+      getPlanetPosition('InvalidPlanet', date, observer);
+    }).toThrow('Invalid body name');
+  });
+
+  test('throws error for Earth (observer is on Earth)', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    expect(() => {
+      getPlanetPosition('Earth', date, observer);
+    }).toThrow('Invalid body name');
+  });
+
+  test('handles different observer locations', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    const tokyo = { latitude: 35.6762, longitude: 139.6503, altitude: 40 };
+    const london = { latitude: 51.5074, longitude: -0.1278, altitude: 11 };
+
+    const marsNYC = getPlanetPosition('Mars', date, observer);
+    const marsTokyo = getPlanetPosition('Mars', date, tokyo);
+    const marsLondon = getPlanetPosition('Mars', date, london);
+
+    // All should return valid positions
+    expect(marsNYC.name).toBe('Mars');
+    expect(marsTokyo.name).toBe('Mars');
+    expect(marsLondon.name).toBe('Mars');
+
+    // Positions should be slightly different due to observer location
+    // (parallax effect, though minimal for distant planets)
+    expect(marsNYC.ra).toBeGreaterThanOrEqual(0);
+    expect(marsTokyo.ra).toBeGreaterThanOrEqual(0);
+    expect(marsLondon.ra).toBeGreaterThanOrEqual(0);
+  });
+
+  test('uses default altitude of 0 if not provided', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    const observerNoAlt = { latitude: 40.7128, longitude: -74.0060 };
+
+    const result = getPlanetPosition('Mars', date, observerNoAlt);
+
+    expect(result.name).toBe('Mars');
+    expect(result.ra).toBeGreaterThanOrEqual(0);
+    expect(result.ra).toBeLessThan(24);
+  });
+
+  test('planet positions change over time', () => {
+    const date1 = new Date('2024-06-21T12:00:00Z');
+    const date2 = new Date('2024-12-21T12:00:00Z'); // 6 months later
+
+    const mars1 = getPlanetPosition('Mars', date1, observer);
+    const mars2 = getPlanetPosition('Mars', date2, observer);
+
+    // Position should be different after 6 months
+    // (Mars orbital period is ~687 days, so significant movement)
+    expect(mars1.ra).not.toBeCloseTo(mars2.ra, 1);
+  });
+
+  test('distance values are realistic', () => {
+    const date = new Date('2024-06-21T12:00:00Z');
+    vi.setSystemTime(date);
+
+    // Mercury: ~0.4-1.4 AU from Earth
+    const mercury = getPlanetPosition('Mercury', date, observer);
+    expect(mercury.dist).toBeGreaterThan(0.3);
+    expect(mercury.dist).toBeLessThan(1.5);
+
+    // Venus: ~0.3-1.7 AU from Earth
+    const venus = getPlanetPosition('Venus', date, observer);
+    expect(venus.dist).toBeGreaterThan(0.2);
+    expect(venus.dist).toBeLessThan(1.8);
+
+    // Jupiter: ~4-7 AU from Earth
+    const jupiter = getPlanetPosition('Jupiter', date, observer);
+    expect(jupiter.dist).toBeGreaterThan(3);
+    expect(jupiter.dist).toBeLessThan(8);
+
+    // Neptune: ~28-31 AU from Earth
+    const neptune = getPlanetPosition('Neptune', date, observer);
+    expect(neptune.dist).toBeGreaterThan(27);
+    expect(neptune.dist).toBeLessThan(32);
   });
 });
