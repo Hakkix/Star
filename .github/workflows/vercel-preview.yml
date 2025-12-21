@@ -39,35 +39,74 @@ jobs:
             const deploymentPollInterval = 10000; // 10 seconds
             const maxAttempts = 60; // 10 minutes max
 
+            console.log(`Starting deployment polling for ref: ${context.payload.pull_request.head.ref}`);
+
             for (let i = 0; i < maxAttempts; i++) {
-              const deployments = await github.rest.repos.listDeployments({
+              // First, try to get all deployments without environment filter
+              const allDeployments = await github.rest.repos.listDeployments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: context.payload.pull_request.head.ref,
-                environment: 'Preview'
+                ref: context.payload.pull_request.head.ref
               });
 
-              if (deployments.data.length > 0) {
-                const latestDeployment = deployments.data[0];
+              console.log(`Found ${allDeployments.data.length} total deployment(s) for this ref`);
+
+              if (allDeployments.data.length > 0) {
+                // Log all available environments
+                const environments = [...new Set(allDeployments.data.map(d => d.environment))];
+                console.log(`Available environments: ${environments.join(', ')}`);
+
+                // Look for Preview or Production environment
+                const latestDeployment = allDeployments.data.find(d =>
+                  d.environment === 'Preview' ||
+                  d.environment === 'Production' ||
+                  d.environment.toLowerCase().includes('preview')
+                ) || allDeployments.data[0];
+
+                console.log(`Checking deployment ID ${latestDeployment.id} in environment: ${latestDeployment.environment}`);
+
                 const statuses = await github.rest.repos.listDeploymentStatuses({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   deployment_id: latestDeployment.id
                 });
 
-                const successStatus = statuses.data.find(s => s.state === 'success');
-                if (successStatus && successStatus.target_url) {
-                  console.log(`Deployment ready: ${successStatus.target_url}`);
-                  core.setOutput('url', successStatus.target_url);
-                  return successStatus.target_url;
+                if (statuses.data.length > 0) {
+                  const latestStatus = statuses.data[0];
+                  console.log(`Current deployment state: ${latestStatus.state}`);
+
+                  if (latestStatus.description) {
+                    console.log(`Status description: ${latestStatus.description}`);
+                  }
+
+                  // Check for success
+                  if (latestStatus.state === 'success' && latestStatus.target_url) {
+                    console.log(`✅ Deployment ready: ${latestStatus.target_url}`);
+                    core.setOutput('url', latestStatus.target_url);
+                    return latestStatus.target_url;
+                  }
+
+                  // Check for failure
+                  if (latestStatus.state === 'failure' || latestStatus.state === 'error') {
+                    throw new Error(`Deployment failed with state: ${latestStatus.state}. Description: ${latestStatus.description || 'No description'}`);
+                  }
+
+                  // If in progress, show target URL if available
+                  if (latestStatus.target_url) {
+                    console.log(`Preview URL (pending): ${latestStatus.target_url}`);
+                  }
+                } else {
+                  console.log('No deployment statuses found yet');
                 }
+              } else {
+                console.log('No deployments found yet for this ref');
               }
 
-              console.log(`Waiting for deployment... (attempt ${i + 1}/${maxAttempts})`);
+              console.log(`⏳ Waiting for deployment... (attempt ${i + 1}/${maxAttempts})`);
               await new Promise(resolve => setTimeout(resolve, deploymentPollInterval));
             }
 
-            throw new Error('Deployment did not complete in time');
+            throw new Error(`Deployment did not complete in time after ${maxAttempts} attempts (${maxAttempts * deploymentPollInterval / 60000} minutes)`);
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
@@ -117,33 +156,74 @@ jobs:
             const deploymentPollInterval = 10000;
             const maxAttempts = 60;
 
+            console.log(`Starting deployment polling for ref: ${context.payload.pull_request.head.ref}`);
+
             for (let i = 0; i < maxAttempts; i++) {
-              const deployments = await github.rest.repos.listDeployments({
+              // Get all deployments without environment filter
+              const allDeployments = await github.rest.repos.listDeployments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: context.payload.pull_request.head.ref,
-                environment: 'Preview'
+                ref: context.payload.pull_request.head.ref
               });
 
-              if (deployments.data.length > 0) {
-                const latestDeployment = deployments.data[0];
+              console.log(`Found ${allDeployments.data.length} total deployment(s) for this ref`);
+
+              if (allDeployments.data.length > 0) {
+                // Log all available environments
+                const environments = [...new Set(allDeployments.data.map(d => d.environment))];
+                console.log(`Available environments: ${environments.join(', ')}`);
+
+                // Look for Preview or Production environment
+                const latestDeployment = allDeployments.data.find(d =>
+                  d.environment === 'Preview' ||
+                  d.environment === 'Production' ||
+                  d.environment.toLowerCase().includes('preview')
+                ) || allDeployments.data[0];
+
+                console.log(`Checking deployment ID ${latestDeployment.id} in environment: ${latestDeployment.environment}`);
+
                 const statuses = await github.rest.repos.listDeploymentStatuses({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   deployment_id: latestDeployment.id
                 });
 
-                const successStatus = statuses.data.find(s => s.state === 'success');
-                if (successStatus && successStatus.target_url) {
-                  core.setOutput('url', successStatus.target_url);
-                  return successStatus.target_url;
+                if (statuses.data.length > 0) {
+                  const latestStatus = statuses.data[0];
+                  console.log(`Current deployment state: ${latestStatus.state}`);
+
+                  if (latestStatus.description) {
+                    console.log(`Status description: ${latestStatus.description}`);
+                  }
+
+                  // Check for success
+                  if (latestStatus.state === 'success' && latestStatus.target_url) {
+                    console.log(`✅ Deployment ready: ${latestStatus.target_url}`);
+                    core.setOutput('url', latestStatus.target_url);
+                    return latestStatus.target_url;
+                  }
+
+                  // Check for failure
+                  if (latestStatus.state === 'failure' || latestStatus.state === 'error') {
+                    throw new Error(`Deployment failed with state: ${latestStatus.state}. Description: ${latestStatus.description || 'No description'}`);
+                  }
+
+                  // If in progress, show target URL if available
+                  if (latestStatus.target_url) {
+                    console.log(`Preview URL (pending): ${latestStatus.target_url}`);
+                  }
+                } else {
+                  console.log('No deployment statuses found yet');
                 }
+              } else {
+                console.log('No deployments found yet for this ref');
               }
 
+              console.log(`⏳ Waiting for deployment... (attempt ${i + 1}/${maxAttempts})`);
               await new Promise(resolve => setTimeout(resolve, deploymentPollInterval));
             }
 
-            throw new Error('Deployment did not complete in time');
+            throw new Error(`Deployment did not complete in time after ${maxAttempts} attempts (${maxAttempts * deploymentPollInterval / 60000} minutes)`);
 
       - name: Run Lighthouse CI
         id: lighthouse
