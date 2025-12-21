@@ -134,7 +134,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-output
-          path: .next
+          path: |
+            .next
           retention-days: 7
           if-no-files-found: error
 
@@ -167,7 +168,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: .next
+          path: |
+            .next
 
       - name: Verify downloaded build artifacts
         run: |
