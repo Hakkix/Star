@@ -118,13 +118,13 @@ export function mockGeolocation(
  * @param orientation - Orientation data to return
  */
 export function mockDeviceOrientation(orientation: MockDeviceOrientation) {
-  // Create a mock DeviceOrientationEvent
+  // Create a mutable mock event object (not typed as DeviceOrientationEvent to allow mutation)
   const mockEvent = {
     alpha: orientation.alpha,
     beta: orientation.beta,
     gamma: orientation.gamma,
     absolute: orientation.absolute ?? false,
-  } as DeviceOrientationEvent;
+  };
 
   // Mock the requestPermission method (iOS 13+)
   const mockRequestPermission = vi
@@ -140,10 +140,10 @@ export function mockDeviceOrientation(orientation: MockDeviceOrientation) {
   const dispatchEvent = () => {
     // Create an event that matches DeviceOrientationEvent structure
     const event = new Event('deviceorientation') as DeviceOrientationEvent;
-    Object.defineProperty(event, 'alpha', { value: mockEvent.alpha });
-    Object.defineProperty(event, 'beta', { value: mockEvent.beta });
-    Object.defineProperty(event, 'gamma', { value: mockEvent.gamma });
-    Object.defineProperty(event, 'absolute', { value: mockEvent.absolute });
+    Object.defineProperty(event, 'alpha', { value: mockEvent.alpha, writable: false });
+    Object.defineProperty(event, 'beta', { value: mockEvent.beta, writable: false });
+    Object.defineProperty(event, 'gamma', { value: mockEvent.gamma, writable: false });
+    Object.defineProperty(event, 'absolute', { value: mockEvent.absolute, writable: false });
     window.dispatchEvent(event);
   };
 
