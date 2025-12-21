@@ -1,0 +1,182 @@
+[
+  {
+    "hip": 677,
+    "ra": 0.1396,
+    "dec": 29.0906,
+    "mag": 2.06,
+    "con": "AND",
+    "dist": 97.2,
+    "name": "Alpheratz"
+  },
+  {
+    "hip": 2081,
+    "ra": 0.4453,
+    "dec": -42.306,
+    "mag": 2.39,
+    "con": "PHE",
+    "dist": 77.3,
+    "name": "Ankaa"
+  },
+  {
+    "hip": 9236,
+    "ra": 1.9858,
+    "dec": 23.4625,
+    "mag": 2.85,
+    "con": "ARI",
+    "dist": 66.0,
+    "name": "Sheratan"
+  },
+  {
+    "hip": 11767,
+    "ra": 2.5297,
+    "dec": 89.2642,
+    "mag": 2.02,
+    "con": "UMI",
+    "dist": 433.0,
+    "name": "Polaris"
+  },
+  {
+    "hip": 15863,
+    "ra": 3.4053,
+    "dec": 49.8611,
+    "mag": 1.79,
+    "con": "PER",
+    "dist": 90.0,
+    "name": "Mirfak"
+  },
+  {
+    "hip": 21421,
+    "ra": 4.5983,
+    "dec": 16.5094,
+    "mag": 0.85,
+    "con": "TAU",
+    "dist": 65.1,
+    "name": "Aldebaran"
+  },
+  {
+    "hip": 24608,
+    "ra": 5.2783,
+    "dec": 45.9981,
+    "mag": 0.08,
+    "con": "AUR",
+    "dist": 42.2,
+    "name": "Capella"
+  },
+  {
+    "hip": 25336,
+    "ra": 5.4386,
+    "dec": -8.2017,
+    "mag": 0.12,
+    "con": "ORI",
+    "dist": 427.0,
+    "name": "Rigel"
+  },
+  {
+    "hip": 27989,
+    "ra": 6.0083,
+    "dec": 7.4069,
+    "mag": 0.42,
+    "con": "ORI",
+    "dist": 548.0,
+    "name": "Betelgeuse"
+  },
+  {
+    "hip": 32349,
+    "ra": 6.7525,
+    "dec": 16.3992,
+    "mag": 1.14,
+    "con": "GEM",
+    "dist": 51.5,
+    "name": "Pollux"
+  },
+  {
+    "hip": 37279,
+    "ra": 7.6553,
+    "dec": 5.225,
+    "mag": 0.38,
+    "con": "CMI",
+    "dist": 11.5,
+    "name": "Procyon"
+  },
+  {
+    "hip": 49669,
+    "ra": 10.1394,
+    "dec": 11.9672,
+    "mag": 1.35,
+    "con": "LEO",
+    "dist": 79.3,
+    "name": "Regulus"
+  },
+  {
+    "hip": 65474,
+    "ra": 13.4217,
+    "dec": -11.1619,
+    "mag": 0.98,
+    "con": "VIR",
+    "dist": 262.0,
+    "name": "Spica"
+  },
+  {
+    "hip": 69673,
+    "ra": 14.2611,
+    "dec": 19.1822,
+    "mag": 2.68,
+    "con": "BOO",
+    "dist": 36.7,
+    "name": "Arcturus"
+  },
+  {
+    "hip": 91262,
+    "ra": 18.6156,
+    "dec": 38.7836,
+    "mag": 0.03,
+    "con": "LYR",
+    "dist": 25.0,
+    "name": "Vega"
+  },
+  {
+    "hip": 97649,
+    "ra": 19.8464,
+    "dec": 8.8675,
+    "mag": 0.77,
+    "con": "AQL",
+    "dist": 16.7,
+    "name": "Altair"
+  },
+  {
+    "hip": 102098,
+    "ra": 20.6906,
+    "dec": 45.2806,
+    "mag": 1.25,
+    "con": "CYG",
+    "dist": 1411.0,
+    "name": "Deneb"
+  },
+  {
+    "hip": 113368,
+    "ra": 22.9608,
+    "dec": -29.6222,
+    "mag": 1.16,
+    "con": "PSA",
+    "dist": 25.1,
+    "name": "Fomalhaut"
+  },
+  {
+    "hip": 677,
+    "ra": 0.1396,
+    "dec": -90.0,
+    "mag": 5.0,
+    "con": "OCT",
+    "dist": 100.0,
+    "name": "South Pole Test Star"
+  },
+  {
+    "hip": 1,
+    "ra": 12.0,
+    "dec": 0.0,
+    "mag": 6.0,
+    "con": "VIR",
+    "dist": 50.0,
+    "name": "Equator Test Star"
+  }
+]
