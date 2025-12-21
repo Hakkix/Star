@@ -24,6 +24,13 @@ import { useState, useEffect, useCallback } from 'react';
 
 export type PermissionState = 'granted' | 'denied' | 'prompt' | 'unsupported';
 
+/**
+ * Type guard to check if the DeviceOrientationEvent has the iOS requestPermission method
+ */
+type DeviceOrientationEventConstructor = typeof DeviceOrientationEvent & {
+  requestPermission?: () => Promise<PermissionState>;
+};
+
 export interface DeviceOrientationState {
   /** Alpha: Rotation around Z-axis (0-360°, compass heading) */
   alpha: number | null;
@@ -52,7 +59,7 @@ function isDeviceOrientationSupported(): boolean {
 function requiresPermission(): boolean {
   return (
     typeof DeviceOrientationEvent !== 'undefined' &&
-    typeof (DeviceOrientationEvent as any).requestPermission === 'function'
+    typeof (DeviceOrientationEvent as DeviceOrientationEventConstructor).requestPermission === 'function'
   );
 }
 
@@ -129,8 +136,8 @@ export function useDeviceOrientation(): DeviceOrientationState {
     // iOS 13+ permission request
     try {
       const response = await (
-        DeviceOrientationEvent as any
-      ).requestPermission();
+        DeviceOrientationEvent as DeviceOrientationEventConstructor
+      ).requestPermission?.();
 
       if (response === 'granted') {
         setPermission('granted');

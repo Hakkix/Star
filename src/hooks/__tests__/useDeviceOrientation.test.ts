@@ -11,6 +11,17 @@ import {
   resetSensorMocks,
 } from '@/test/mocks/sensors';
 
+/**
+ * Type definitions for testing purposes
+ */
+interface WindowWithDeviceOrientation extends Window {
+  DeviceOrientationEvent?: typeof DeviceOrientationEvent;
+}
+
+interface DeviceOrientationEventConstructor {
+  requestPermission?: () => Promise<PermissionState>;
+}
+
 describe('useDeviceOrientation Hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -22,7 +33,7 @@ describe('useDeviceOrientation Hook', () => {
 
   test('initially returns null orientation values on iOS (permission required)', () => {
     // Mock iOS environment (requires permission)
-    const mock = mockDeviceOrientation({ alpha: 45, beta: 10, gamma: 5 });
+    mockDeviceOrientation({ alpha: 45, beta: 10, gamma: 5 });
 
     const { result } = renderHook(() => useDeviceOrientation());
 
@@ -184,7 +195,7 @@ describe('useDeviceOrientation Hook', () => {
 
   test('cleans up event listener on unmount', async () => {
     const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener');
-    const mock = mockDeviceOrientation({ alpha: 45, beta: 10, gamma: 5 });
+    mockDeviceOrientation({ alpha: 45, beta: 10, gamma: 5 });
 
     const { result, unmount } = renderHook(() => useDeviceOrientation());
 
@@ -226,24 +237,24 @@ describe('useDeviceOrientation Hook', () => {
 describe('useDeviceOrientation Hook - Browser Compatibility', () => {
   test('handles missing DeviceOrientation API', () => {
     // Save original
-    const originalDeviceOrientationEvent = (window as any).DeviceOrientationEvent;
+    const originalDeviceOrientationEvent = (window as WindowWithDeviceOrientation).DeviceOrientationEvent;
 
     // Remove DeviceOrientationEvent
-    delete (window as any).DeviceOrientationEvent;
+    delete (window as WindowWithDeviceOrientation).DeviceOrientationEvent;
 
     const { result } = renderHook(() => useDeviceOrientation());
 
     expect(result.current.permission).toBe('unsupported');
 
     // Restore
-    (window as any).DeviceOrientationEvent = originalDeviceOrientationEvent;
+    (window as WindowWithDeviceOrientation).DeviceOrientationEvent = originalDeviceOrientationEvent;
   });
 
   test('handles Android-style (no permission required)', async () => {
     const mock = mockDeviceOrientation({ alpha: 45, beta: 10, gamma: 5 });
 
     // Remove requestPermission (simulate Android)
-    delete (DeviceOrientationEvent as any).requestPermission;
+    delete (DeviceOrientationEvent as unknown as DeviceOrientationEventConstructor).requestPermission;
 
     const { result } = renderHook(() => useDeviceOrientation());
 
