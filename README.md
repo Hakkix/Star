@@ -713,12 +713,62 @@ export default function Home() {
 }
 ```
 
+### 8. Star Catalog Data
+
+#### Current Data Source
+
+The application currently uses a test fixture located at `src/data/stars.json` containing 20 bright stars for MVP development and testing purposes.
+
+**Data Format:**
+```json
+{
+  "hip": 677,           // Hipparcos catalog number (unique identifier)
+  "ra": 0.1396,         // Right Ascension in hours (0-24)
+  "dec": 29.0906,       // Declination in degrees (-90 to 90)
+  "mag": 2.06,          // Apparent magnitude (lower = brighter)
+  "con": "AND",         // 3-letter constellation code (IAU standard)
+  "dist": 97.2,         // Distance in light-years
+  "name": "Alpheratz"   // Common name (if available)
+}
+```
+
+**Included Stars:**
+The test catalog includes 20 prominent stars across different constellations:
+- Polaris (UMI) - The North Star
+- Betelgeuse, Rigel (ORI) - Orion constellation
+- Vega (LYR), Altair (AQL), Deneb (CYG) - Summer Triangle
+- Aldebaran (TAU), Capella (AUR) - Winter stars
+- Regulus (LEO), Spica (VIR), Arcturus (BOO) - Spring stars
+- Fomalhaut (PSA), Ankaa (PHE) - Southern stars
+- Plus test stars at extreme coordinates (South Pole, Equator)
+
+#### Production Star Catalog (Future)
+
+For production deployment, the catalog should be expanded to 5,000-8,000 stars for a complete sky experience.
+
+**Recommended Sources:**
+1. **Hipparcos Catalog** - High-precision astrometry catalog
+   - Available from [VizieR](http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=I/239)
+   - Filter to magnitude < 6.5 (naked eye visibility)
+
+2. **Yale Bright Star Catalog** - Public domain catalog of ~9,000 stars
+   - Available from [Harvard TDC](http://tdc-www.harvard.edu/catalogs/bsc5.html)
+   - Already filtered to naked-eye visibility
+
+**Processing Requirements:**
+- Convert source catalog to JSON format matching the schema above
+- Include constellation assignment for each star
+- Calculate or include distance data (light-years)
+- Optionally include common names from name databases
+
+See issue #[TBD] for tracking production catalog implementation.
+
 ## Summary
 
 You now have a functional AR Star Map prototype with:
 
 * **Device Sensors**: iOS permissions handled, sensors mapped to camera quaternion.
-* **Star Data**: 5,000+ stars rendered efficiently with InstancedMesh using Cartesian conversion.
+* **Star Data**: 20 bright stars (MVP) rendered efficiently with InstancedMesh using Cartesian conversion.
 * **Planetary Data**: Real-time calculation of planet positions based on GPS and Time using astronomy-engine.
 * **World Alignment**: The celestial sphere is rotated to match the user's local horizon and sidereal time.
 * **Interaction**: A robust raycasting system using Zustand to bridge the 3D scene and a React UI overlay.
