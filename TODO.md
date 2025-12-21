@@ -75,12 +75,12 @@ The production star catalog is missing. Need 5000+ stars for full experience.
 - [x] Copy test fixture to `src/data/stars.json`
 - [x] Document data source and format in README
 - [x] Create issue for obtaining production catalog
-- [ ] Add data processing script if needed (deferred to production catalog issue)
+- [x] Add data processing script if needed
 
-**Status**: ✅ Completed (MVP with 20 stars)
+**Status**: ✅ Completed (MVP with 20 stars, processing scripts ready for production catalog)
 **Blocking**: StarField implementation
 **Estimated Effort**: 1-2 hours (MVP), 1-2 days (production data)
-**Notes**: MVP complete with 20-star test fixture. Production catalog tracked in separate issue template at `.github/ISSUE_TEMPLATE_PRODUCTION_CATALOG.md`. Data documented in README.md section 8.
+**Notes**: MVP complete with 20-star test fixture. Production catalog tracked in separate issue template at `.github/ISSUE_TEMPLATE_PRODUCTION_CATALOG.md`. Data documented in README.md section 8. Data processing and validation scripts created in `scripts/` directory with npm commands `npm run process-stars` and `npm run validate-stars`.
 
 ---
 
