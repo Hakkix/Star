@@ -1,60 +1,12 @@
 /**
- * Example tests for Overlay component
- * Demonstrates testing React components with user interactions
- *
- * NOTE: This is a template test. Actual implementation will be added
- * when the Overlay component is created.
+ * Tests for Overlay component
+ * Verifies component behavior for permission requests, loading, and error states
  */
 
 import { describe, test, expect, vi } from 'vitest';
 import { render, screen } from '@/test/utils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
-
-// Example Overlay component (will be implemented in src/components/dom/Overlay.tsx)
-interface OverlayProps {
-  onRequestPermission?: () => void;
-  permissionGranted?: boolean;
-  showLoading?: boolean;
-  errorMessage?: string | null;
-}
-
-function Overlay({
-  onRequestPermission,
-  permissionGranted = false,
-  showLoading = false,
-  errorMessage = null,
-}: OverlayProps) {
-  // Error takes highest precedence
-  if (errorMessage) {
-    return (
-      <div role="alert" aria-live="assertive">
-        <p>Error: {errorMessage}</p>
-      </div>
-    );
-  }
-
-  // Loading takes second precedence
-  if (showLoading) {
-    return (
-      <div role="status" aria-live="polite">
-        <p>Loading star map...</p>
-      </div>
-    );
-  }
-
-  // Permission request UI
-  if (!permissionGranted) {
-    return (
-      <div>
-        <h2>Star AR Requires Permissions</h2>
-        <p>To view the star map, we need access to your device orientation and location.</p>
-        <button onClick={onRequestPermission}>Enable Device Orientation</button>
-      </div>
-    );
-  }
-
-  return null; // No overlay when everything is granted
-}
+import { Overlay } from '@/components/dom/Overlay';
 
 describe('Overlay Component', () => {
   test('renders permission request UI when permission not granted', () => {

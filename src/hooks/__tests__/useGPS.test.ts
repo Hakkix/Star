@@ -1,74 +1,15 @@
 /**
- * Example tests for useGPS hook
- * Demonstrates testing hooks that interact with browser APIs
- *
- * NOTE: This is a template test. Actual implementation will be added
- * when the useGPS hook is created.
+ * Tests for useGPS hook
+ * Verifies hook behavior when interacting with browser Geolocation API
  */
 
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { useState, useEffect } from 'react';
+import { useGPS, createGeolocationError } from '@/hooks/useGPS';
 import {
   mockGeolocation,
-  createGeolocationError,
   resetSensorMocks,
 } from '@/test/mocks/sensors';
-
-// Example hook signature (will be implemented in src/hooks/useGPS.ts)
-type GPSState = {
-  latitude: number | null;
-  longitude: number | null;
-  accuracy: number | null;
-  error: GeolocationPositionError | null;
-  loading: boolean;
-};
-
-/**
- * Example useGPS hook implementation
- * This will be created in src/hooks/useGPS.ts
- */
-function useGPS(): GPSState {
-  const [state, setState] = useState<GPSState>({
-    latitude: null,
-    longitude: null,
-    accuracy: null,
-    error: null,
-    loading: true,
-  });
-
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setState((prev) => ({
-        ...prev,
-        loading: false,
-        error: createGeolocationError(2, 'Geolocation not supported'),
-      }));
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-          error: null,
-          loading: false,
-        });
-      },
-      (error) => {
-        setState((prev) => ({
-          ...prev,
-          error,
-          loading: false,
-        }));
-      }
-    );
-  }, []);
-
-  return state;
-}
 
 describe('useGPS Hook', () => {
   beforeEach(() => {
