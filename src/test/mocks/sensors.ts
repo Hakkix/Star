@@ -138,9 +138,13 @@ export function mockDeviceOrientation(orientation: MockDeviceOrientation) {
 
   // Helper to dispatch the event
   const dispatchEvent = () => {
-    window.dispatchEvent(
-      new CustomEvent('deviceorientation', { detail: mockEvent })
-    );
+    // Create an event that matches DeviceOrientationEvent structure
+    const event = new Event('deviceorientation') as DeviceOrientationEvent;
+    Object.defineProperty(event, 'alpha', { value: mockEvent.alpha });
+    Object.defineProperty(event, 'beta', { value: mockEvent.beta });
+    Object.defineProperty(event, 'gamma', { value: mockEvent.gamma });
+    Object.defineProperty(event, 'absolute', { value: mockEvent.absolute });
+    window.dispatchEvent(event);
   };
 
   return {

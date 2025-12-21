@@ -1,7 +1,7 @@
 # Star AR Project - Comprehensive TODO List
 
 > **Last Updated**: 2025-12-21
-> **Project Status**: Foundation Phase (21% of Phase 1 complete, 6.8% overall)
+> **Project Status**: Foundation Phase (36% of Phase 1 complete, 11.4% overall)
 > **Current Priority**: Core AR Feature Implementation
 
 ---
@@ -100,13 +100,13 @@ Implement geolocation wrapper for accessing user's GPS coordinates.
 - Auto-update on position change (optional for MVP)
 
 **Acceptance Criteria**:
-- [ ] Create `src/hooks/useGPS.ts`
-- [ ] Implement permission request flow
-- [ ] Handle error states (denied, unavailable, timeout)
-- [ ] Return coordinates with proper TypeScript types
-- [ ] Write unit tests (80% coverage)
+- [x] Create `src/hooks/useGPS.ts`
+- [x] Implement permission request flow
+- [x] Handle error states (denied, unavailable, timeout)
+- [x] Return coordinates with proper TypeScript types
+- [x] Write unit tests (80% coverage)
 - [ ] Test on mobile device (real GPS)
-- [ ] Update existing test file to test actual implementation
+- [x] Update existing test file to test actual implementation
 
 **Reference**: CLAUDE.md lines 85-86, README.md section on GPS
 **Estimated Effort**: 4-6 hours
@@ -126,14 +126,14 @@ Implement sensor fusion for device orientation with iOS 13+ permission handling.
 - Clean up event listeners on unmount
 
 **Acceptance Criteria**:
-- [ ] Create `src/hooks/useDeviceOrientation.ts`
-- [ ] Implement iOS permission request (user gesture required)
-- [ ] Add event listeners for `deviceorientation`
-- [ ] Convert raw sensor data to usable format
-- [ ] Handle Android vs iOS differences
-- [ ] Write unit tests with mocked sensors
+- [x] Create `src/hooks/useDeviceOrientation.ts`
+- [x] Implement iOS permission request (user gesture required)
+- [x] Add event listeners for `deviceorientation`
+- [x] Convert raw sensor data to usable format
+- [x] Handle Android vs iOS differences
+- [x] Write unit tests with mocked sensors
 - [ ] Test on actual iOS device (real permission flow)
-- [ ] Document permission requirements
+- [x] Document permission requirements
 
 **Reference**: CLAUDE.md lines 66-73, README.md sensor section
 **Estimated Effort**: 6-8 hours
@@ -975,12 +975,12 @@ None (no implementation to have bugs yet)
 
 Use this checklist to track overall project completion:
 
-### Phase 1: MVP ☑️ 3/14
+### Phase 1: MVP ☑️ 5/14
 - ✅ CRIT-1: Development environment
 - ✅ CRIT-2: Test infrastructure
 - ✅ CRIT-3: Star catalog data
-- ⬜ HP-1.1: useGPS hook
-- ⬜ HP-1.2: useDeviceOrientation hook
+- ✅ HP-1.1: useGPS hook
+- ✅ HP-1.2: useDeviceOrientation hook
 - ⬜ HP-2: astronomy.ts library
 - ⬜ HP-3: Zustand store
 - ⬜ HP-4: Scene component
@@ -1019,11 +1019,11 @@ Use this checklist to track overall project completion:
 ---
 
 **Total Tasks**: 44
-**Completed**: 3
+**Completed**: 5
 **In Progress**: 0
-**Not Started**: 41
+**Not Started**: 39
 
-**Overall Completion**: 6.8%
+**Overall Completion**: 11.4%
 
 ---
 
