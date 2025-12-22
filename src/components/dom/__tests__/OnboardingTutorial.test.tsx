@@ -10,6 +10,9 @@ import { OnboardingTutorial } from '@/components/dom/OnboardingTutorial';
 
 const STORAGE_KEY = 'star-ar-tutorial-completed';
 
+// Helper to wait for animation delays
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 describe('OnboardingTutorial Component', () => {
   let localStorageMock: { [key: string]: string } = {};
 
@@ -134,7 +137,9 @@ describe('OnboardingTutorial Component', () => {
 
       // Navigate to last step
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
 
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /Start Exploring/i })).toBeInTheDocument();
@@ -146,9 +151,19 @@ describe('OnboardingTutorial Component', () => {
     test('renders correct number of step indicators', () => {
       const { container } = render(<OnboardingTutorial />);
 
-      // Should have 3 step indicator dots
-      const stepIndicators = container.querySelectorAll('[style*="borderRadius"]');
-      expect(stepIndicators.length).toBeGreaterThanOrEqual(3);
+      // Should have 3 step indicator dots - find the container with display:flex and gap
+      const allDivs = container.querySelectorAll('div[style*="display"]');
+      const stepIndicatorContainer = Array.from(allDivs).find(div => {
+        const style = div.getAttribute('style') || '';
+        return style.includes('gap') && style.includes('0.5rem') && style.includes('justify-content');
+      });
+
+      expect(stepIndicatorContainer).toBeTruthy();
+      // Count direct children divs (step dots)
+      const stepDots = Array.from(stepIndicatorContainer?.children || []).filter(
+        child => child.tagName === 'DIV'
+      );
+      expect(stepDots.length).toBe(3);
     });
   });
 
@@ -160,7 +175,14 @@ describe('OnboardingTutorial Component', () => {
 
       // Navigate to last step
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
+
+      // Wait for animation to complete and button to appear
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /Start Exploring/i })).toBeInTheDocument();
+      });
 
       // Click "Start Exploring"
       await user.click(screen.getByRole('button', { name: /Start Exploring/i }));
@@ -174,7 +196,14 @@ describe('OnboardingTutorial Component', () => {
 
       // Navigate to last step
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
+
+      // Wait for checkbox to appear
+      await waitFor(() => {
+        expect(screen.getByRole('checkbox', { name: /Don't show this tutorial again/i })).toBeInTheDocument();
+      });
 
       // Check "don't show again"
       const checkbox = screen.getByRole('checkbox', { name: /Don't show this tutorial again/i });
@@ -193,7 +222,14 @@ describe('OnboardingTutorial Component', () => {
 
       // Navigate to last step
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
+
+      // Wait for button to appear
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /Start Exploring/i })).toBeInTheDocument();
+      });
 
       // Complete tutorial WITHOUT checking "don't show again"
       await user.click(screen.getByRole('button', { name: /Start Exploring/i }));
@@ -227,7 +263,9 @@ describe('OnboardingTutorial Component', () => {
 
       // Navigate to last step
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
 
       await waitFor(() => {
         expect(screen.queryByRole('button', { name: /Skip tutorial/i })).not.toBeInTheDocument();
@@ -271,7 +309,9 @@ describe('OnboardingTutorial Component', () => {
       render(<OnboardingTutorial />);
 
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
 
       await waitFor(() => {
         expect(screen.getByText('Move Around')).toBeInTheDocument();
@@ -287,7 +327,9 @@ describe('OnboardingTutorial Component', () => {
 
       // Navigate to last step
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
 
       await waitFor(() => {
         const checkbox = screen.getByRole('checkbox', { name: /Don't show this tutorial again/i });
@@ -301,19 +343,24 @@ describe('OnboardingTutorial Component', () => {
 
       // Navigate to last step
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
       await user.click(screen.getByRole('button', { name: /Next/i }));
+      await delay(250); // Wait for animation
 
-      await waitFor(async () => {
-        const checkbox = screen.getByRole('checkbox', { name: /Don't show this tutorial again/i });
-
-        // Check it
-        await user.click(checkbox);
-        expect(checkbox).toBeChecked();
-
-        // Uncheck it
-        await user.click(checkbox);
-        expect(checkbox).not.toBeChecked();
+      // Wait for checkbox to appear
+      await waitFor(() => {
+        expect(screen.getByRole('checkbox', { name: /Don't show this tutorial again/i })).toBeInTheDocument();
       });
+
+      const checkbox = screen.getByRole('checkbox', { name: /Don't show this tutorial again/i });
+
+      // Check it
+      await user.click(checkbox);
+      expect(checkbox).toBeChecked();
+
+      // Uncheck it
+      await user.click(checkbox);
+      expect(checkbox).not.toBeChecked();
     });
   });
 
