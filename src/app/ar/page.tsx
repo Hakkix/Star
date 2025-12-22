@@ -82,7 +82,7 @@ export default function ARExperience() {
       </Suspense>
 
       {/* Permission and Status Overlay */}
-      {(!permissionGranted || hasError || gpsLoading) && (
+      {(!permissionGranted || hasError) && (
         <div style={{
           position: 'fixed',
           top: 0,
@@ -94,7 +94,7 @@ export default function ARExperience() {
           <Overlay
             permissionGranted={permissionGranted}
             onRequestPermission={requestOrientationPermission}
-            showLoading={gpsLoading}
+            showLoading={false}
             errorMessage={errorMessage}
           />
         </div>
