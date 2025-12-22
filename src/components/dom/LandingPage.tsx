@@ -3,15 +3,78 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import FAQ from './FAQ'
+import SocialProof from './SocialProof'
 import styles from './LandingPage.module.css'
+
+// Animated counter component for statistics
+function AnimatedCounter({ end, duration, suffix = '' }: { end: number; duration: number; suffix?: string }) {
+  const [count, setCount] = useState(0)
+  const [hasStarted, setHasStarted] = useState(false)
+  const counterRef = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasStarted) {
+          setHasStarted(true)
+        }
+      },
+      { threshold: 0.5 }
+    )
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [hasStarted])
+
+  useEffect(() => {
+    if (!hasStarted) return
+
+    let startTime: number | null = null
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime
+      const progress = Math.min((currentTime - startTime) / duration, 1)
+
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+      setCount(Math.floor(easeOutQuart * end))
+
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      }
+    }
+
+    requestAnimationFrame(animate)
+  }, [hasStarted, end, duration])
+
+  return <span ref={counterRef}>{count.toLocaleString()}{suffix}</span>
+}
 
 export default function LandingPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [currentTextIndex, setCurrentTextIndex] = useState(0)
+
+  const rotatingTexts = [
+    "Identify constellations in real-time",
+    "Track planets across the sky",
+    "Learn about 5000+ stars",
+    "Discover the cosmos in AR"
+  ]
 
   useEffect(() => {
     setIsVisible(true)
   }, [])
+
+  // Animated text carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTextIndex((prev) => (prev + 1) % rotatingTexts.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [rotatingTexts.length])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -124,7 +187,9 @@ export default function LandingPage() {
             <span className={styles.titleGradient}>Explore</span> the Cosmos
           </h1>
           <p className={styles.subtitle}>
-            Point your device at the sky and discover the universe in augmented reality
+            <span className={styles.rotatingText} key={currentTextIndex}>
+              {rotatingTexts[currentTextIndex]}
+            </span>
           </p>
           <div className={styles.heroButtons}>
             <Link href="/ar" className={styles.primaryButton}>
@@ -136,6 +201,28 @@ export default function LandingPage() {
             <a href="#features" className={styles.secondaryButton}>
               Learn More
             </a>
+          </div>
+
+          {/* Statistics Section */}
+          <div className={styles.statistics}>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>
+                <AnimatedCounter end={5000} duration={2000} suffix="+" />
+              </div>
+              <div className={styles.statLabel}>Stars</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>
+                <AnimatedCounter end={8} duration={2000} suffix="" />
+              </div>
+              <div className={styles.statLabel}>Planets</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>
+                <AnimatedCounter end={88} duration={2000} suffix="" />
+              </div>
+              <div className={styles.statLabel}>Constellations</div>
+            </div>
           </div>
         </div>
         <div className={styles.scrollIndicator}>
@@ -233,6 +320,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Social Proof Section */}
+      <SocialProof />
 
       {/* How It Works Section */}
       <section className={styles.howItWorks}>
