@@ -3,7 +3,7 @@
  * Provides access to device GPS coordinates via Geolocation API
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 /**
  * GPS state returned by the useGPS hook
@@ -21,6 +21,8 @@ export type GPSState = {
   loading: boolean;
   /** Whether the current location is a fallback (not actual GPS) */
   isFallback: boolean;
+  /** Function to manually request GPS permission */
+  requestPermission: () => Promise<void>;
 };
 
 /**
@@ -53,12 +55,12 @@ export function createGeolocationError(
 /**
  * Hook to access device GPS coordinates
  *
- * @returns GPSState object with coordinates, accuracy, error, and loading state
+ * @returns GPSState object with coordinates, accuracy, error, loading state, and requestPermission function
  *
  * @example
  * ```tsx
  * function MyComponent() {
- *   const { latitude, longitude, error, loading } = useGPS();
+ *   const { latitude, longitude, error, loading, requestPermission } = useGPS();
  *
  *   if (loading) return <div>Getting location...</div>;
  *   if (error) return <div>Error: {error.message}</div>;
@@ -69,16 +71,19 @@ export function createGeolocationError(
  * ```
  */
 export function useGPS(): GPSState {
-  const [state, setState] = useState<GPSState>({
+  const [state, setState] = useState<Omit<GPSState, 'requestPermission'>>({
     latitude: null,
     longitude: null,
     accuracy: null,
     error: null,
-    loading: true,
+    loading: false,
     isFallback: false,
   });
 
-  useEffect(() => {
+  /**
+   * Request GPS permission and get current position
+   */
+  const requestPermission = async (): Promise<void> => {
     // Check if geolocation is supported
     if (!navigator.geolocation) {
       // Use fallback location when geolocation is not supported
@@ -88,32 +93,40 @@ export function useGPS(): GPSState {
         loading: false,
         isFallback: true,
       });
-      return;
+      throw new Error('Geolocation not supported');
     }
 
-    // Request current position
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-          error: null,
-          loading: false,
-          isFallback: false,
-        });
-      },
-      (error) => {
-        // Use fallback location when permission is denied or other errors occur
-        setState({
-          ...FALLBACK_LOCATION,
-          error,
-          loading: false,
-          isFallback: true,
-        });
-      }
-    );
-  }, []);
+    setState(prev => ({ ...prev, loading: true, error: null }));
 
-  return state;
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setState({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            error: null,
+            loading: false,
+            isFallback: false,
+          });
+          resolve();
+        },
+        (error) => {
+          // Use fallback location when permission is denied or other errors occur
+          setState({
+            ...FALLBACK_LOCATION,
+            error,
+            loading: false,
+            isFallback: true,
+          });
+          reject(error);
+        }
+      );
+    });
+  };
+
+  return {
+    ...state,
+    requestPermission,
+  };
 }

@@ -5,8 +5,9 @@ import { Suspense } from 'react'
 import Link from 'next/link'
 import { useDeviceOrientation } from '@/hooks/useDeviceOrientation'
 import { useGPS } from '@/hooks/useGPS'
-import { Overlay } from '@/components/dom/Overlay'
+import { OnboardingFlow } from '@/components/dom/OnboardingFlow'
 import { DetailOverlay } from '@/components/dom/DetailOverlay'
+import { useStarStore } from '@/lib/store'
 
 /**
  * AR Experience Page (HP-11)
@@ -41,6 +42,9 @@ const Scene = dynamic(() => import('@/components/canvas/Scene'), {
 })
 
 export default function ARExperience() {
+  // Store hooks
+  const { hasCompletedOnboarding } = useStarStore();
+
   // Device orientation hook for camera control
   const {
     permission: orientationPermission,
@@ -50,16 +54,16 @@ export default function ARExperience() {
 
   // GPS hook for celestial alignment
   const {
+    latitude,
+    longitude,
+    requestPermission: requestGPSPermission,
     error: gpsError,
     isFallback: gpsIsFallback
   } = useGPS()
 
-  // Determine overall permission state
-  const permissionGranted = orientationPermission === 'granted'
-  // Only show orientation errors as blocking errors
-  // GPS errors are handled with fallback location
-  const hasError = !!orientationError
-  const errorMessage = orientationError
+  // Determine permission states
+  const hasGPSPermission = !!(latitude && longitude) || gpsIsFallback
+  const hasOrientationPermission = orientationPermission === 'granted'
 
   return (
     <>
@@ -128,30 +132,23 @@ export default function ARExperience() {
         <Scene />
       </Suspense>
 
-      {/* Permission and Status Overlay */}
-      {(!permissionGranted || hasError) && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 10
-        }}>
-          <Overlay
-            permissionGranted={permissionGranted}
-            onRequestPermission={requestOrientationPermission}
-            showLoading={false}
-            errorMessage={errorMessage}
-          />
-        </div>
+      {/* Onboarding Flow */}
+      {!hasCompletedOnboarding && (
+        <OnboardingFlow
+          onRequestLocation={requestGPSPermission}
+          onRequestOrientation={requestOrientationPermission}
+          hasGPSPermission={hasGPSPermission}
+          hasOrientationPermission={hasOrientationPermission}
+          gpsError={gpsError?.message || null}
+          orientationError={orientationError}
+        />
       )}
 
       {/* GPS Fallback Warning - Non-blocking */}
-      {gpsIsFallback && permissionGranted && !hasError && (
+      {gpsIsFallback && hasCompletedOnboarding && (
         <div style={{
           position: 'fixed',
-          top: '1rem',
+          top: '5rem',
           left: '50%',
           transform: 'translateX(-50%)',
           backgroundColor: 'rgba(255, 152, 0, 0.9)',
