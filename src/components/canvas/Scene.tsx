@@ -18,7 +18,10 @@ export default function Scene() {
     const canvas = document.createElement('canvas')
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
     if (!gl) {
+      console.error('WebGL not supported')
       setHasWebGL(false)
+    } else {
+      console.log('WebGL supported, initializing 3D scene')
     }
   }, [])
 
@@ -117,6 +120,11 @@ export default function Scene() {
         width: '100vw',
         height: '100vh',
         background: '#000000'
+      }}
+      onCreated={({ scene, camera }) => {
+        console.log('Canvas created successfully')
+        console.log('Camera position:', camera.position)
+        console.log('Scene children:', scene.children.length)
       }}
     >
       {/* Ambient lighting for basic visibility */}

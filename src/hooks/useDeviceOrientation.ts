@@ -120,7 +120,10 @@ export function useDeviceOrientation(): DeviceOrientationState {
    * MUST be called from a user gesture (button click, etc.)
    */
   const requestPermission = useCallback(async () => {
+    console.log('Requesting device orientation permission...');
+
     if (!isDeviceOrientationSupported()) {
+      console.error('Device orientation not supported');
       setError('Device orientation is not supported on this device');
       setPermission('unsupported');
       return;
@@ -128,25 +131,32 @@ export function useDeviceOrientation(): DeviceOrientationState {
 
     // If permission request is not required (Android, desktop), grant immediately
     if (!requiresPermission()) {
+      console.log('Permission not required (Android/desktop), granting automatically');
       setPermission('granted');
       setError(null);
       return;
     }
 
     // iOS 13+ permission request
+    console.log('Requesting iOS device orientation permission');
     try {
       const response = await (
         DeviceOrientationEvent as DeviceOrientationEventConstructor
       ).requestPermission?.();
 
+      console.log('Permission response:', response);
+
       if (response === 'granted') {
+        console.log('Device orientation permission granted');
         setPermission('granted');
         setError(null);
       } else {
+        console.warn('Device orientation permission denied');
         setPermission('denied');
         setError('Permission denied by user');
       }
     } catch (err) {
+      console.error('Error requesting device orientation permission:', err);
       setPermission('denied');
       setError(
         err instanceof Error
@@ -164,9 +174,11 @@ export function useDeviceOrientation(): DeviceOrientationState {
       return;
     }
 
+    console.log('Setting up device orientation event listener');
     window.addEventListener('deviceorientation', handleOrientation);
 
     return () => {
+      console.log('Removing device orientation event listener');
       window.removeEventListener('deviceorientation', handleOrientation);
     };
   }, [permission, handleOrientation]);

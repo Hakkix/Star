@@ -82,22 +82,23 @@ export default function ARExperience() {
       </Suspense>
 
       {/* Permission and Status Overlay */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        pointerEvents: permissionGranted && !hasError ? 'none' : 'auto',
-        zIndex: 10
-      }}>
-        <Overlay
-          permissionGranted={permissionGranted}
-          onRequestPermission={requestOrientationPermission}
-          showLoading={gpsLoading}
-          errorMessage={errorMessage}
-        />
-      </div>
+      {(!permissionGranted || hasError || gpsLoading) && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 10
+        }}>
+          <Overlay
+            permissionGranted={permissionGranted}
+            onRequestPermission={requestOrientationPermission}
+            showLoading={gpsLoading}
+            errorMessage={errorMessage}
+          />
+        </div>
+      )}
 
       {/* GPS Fallback Warning - Non-blocking */}
       {gpsIsFallback && permissionGranted && !hasError && (
