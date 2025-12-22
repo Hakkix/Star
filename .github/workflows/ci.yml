@@ -167,7 +167,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: .
+          path: .next
 
       - name: Verify downloaded build artifacts
         run: |
