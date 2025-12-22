@@ -3,7 +3,7 @@
  * Verifies component behavior for displaying celestial body information
  */
 
-import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@/test/utils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
 import { DetailOverlay } from '@/components/dom/DetailOverlay';
