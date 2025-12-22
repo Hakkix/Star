@@ -39,7 +39,6 @@ describe('Planets Component', () => {
     mockUseGPS.mockReturnValue({
       latitude: 40.7128,
       longitude: -74.0060,
-      altitude: 0,
       accuracy: 10,
       error: null,
       loading: false,
@@ -87,9 +86,14 @@ describe('Planets Component', () => {
     mockUseGPS.mockReturnValue({
       latitude: null,
       longitude: null,
-      altitude: null,
       accuracy: null,
-      error: 'GPS not available',
+      error: {
+        code: 2,
+        message: 'GPS not available',
+        PERMISSION_DENIED: 1,
+        POSITION_UNAVAILABLE: 2,
+        TIMEOUT: 3,
+      } as GeolocationPositionError,
       loading: false,
       requestPermission: vi.fn(),
     })
@@ -120,7 +124,6 @@ describe('Planets Component', () => {
     mockUseGPS.mockReturnValue({
       latitude: null,
       longitude: -74.0060,
-      altitude: 0,
       accuracy: 10,
       error: null,
       loading: false,
@@ -141,7 +144,6 @@ describe('Planets Component', () => {
     mockUseGPS.mockReturnValue({
       latitude: 40.7128,
       longitude: null,
-      altitude: 0,
       accuracy: null,
       error: null,
       loading: false,
@@ -185,7 +187,6 @@ describe('Planets Component', () => {
     mockUseGPS.mockReturnValue({
       latitude: null,
       longitude: null,
-      altitude: null,
       accuracy: null,
       error: null,
       loading: true,
@@ -206,7 +207,6 @@ describe('Planets Component', () => {
     mockUseGPS.mockReturnValue({
       latitude: null,
       longitude: null,
-      altitude: null,
       accuracy: null,
       error: {
         code: 1,
@@ -214,7 +214,7 @@ describe('Planets Component', () => {
         PERMISSION_DENIED: 1,
         POSITION_UNAVAILABLE: 2,
         TIMEOUT: 3,
-      },
+      } as GeolocationPositionError,
       loading: false,
       requestPermission: vi.fn(),
     })
