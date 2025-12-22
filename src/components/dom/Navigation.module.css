@@ -149,7 +149,7 @@
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  z-index: 1001;
+  z-index: 1102;
 }
 
 .hamburger {
@@ -192,7 +192,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(4px);
-  z-index: 999;
+  z-index: 1100;
   animation: fadeIn 0.3s ease;
 }
 
@@ -208,7 +208,7 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-left: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 1000;
+  z-index: 1101;
   padding: 5rem 2rem 2rem;
   animation: slideIn 0.3s ease;
   overflow-y: auto;
