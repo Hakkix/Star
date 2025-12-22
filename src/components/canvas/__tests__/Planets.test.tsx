@@ -42,7 +42,6 @@ describe('Planets Component', () => {
       accuracy: 10,
       error: null,
       loading: false,
-      requestPermission: vi.fn(),
     })
 
     // Mock planet positions
@@ -95,7 +94,6 @@ describe('Planets Component', () => {
         TIMEOUT: 3,
       } as GeolocationPositionError,
       loading: false,
-      requestPermission: vi.fn(),
     })
 
     const { container } = render(
@@ -127,7 +125,6 @@ describe('Planets Component', () => {
       accuracy: 10,
       error: null,
       loading: false,
-      requestPermission: vi.fn(),
     })
 
     const { container } = render(
@@ -147,7 +144,6 @@ describe('Planets Component', () => {
       accuracy: null,
       error: null,
       loading: false,
-      requestPermission: vi.fn(),
     })
 
     const { container } = render(
@@ -190,7 +186,6 @@ describe('Planets Component', () => {
       accuracy: null,
       error: null,
       loading: true,
-      requestPermission: vi.fn(),
     })
 
     const { container } = render(
@@ -216,7 +211,6 @@ describe('Planets Component', () => {
         TIMEOUT: 3,
       } as GeolocationPositionError,
       loading: false,
-      requestPermission: vi.fn(),
     })
 
     const { container } = render(
