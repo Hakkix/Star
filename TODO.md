@@ -249,20 +249,21 @@ Syncs Three.js camera rotation to device orientation sensors.
 - Handle missing sensor data gracefully
 
 **Acceptance Criteria**:
-- [ ] Create `src/components/canvas/CameraController.tsx`
-- [ ] Import `useDeviceOrientation` hook
-- [ ] Implement euler → quaternion conversion
+- [x] Create `src/components/canvas/CameraController.tsx`
+- [x] Import `useDeviceOrientation` hook
+- [x] Implement euler → quaternion conversion
   - Formula: See CLAUDE.md lines 75-82
   - Order: 'YXZ' for proper rotation
-- [ ] Apply camera orientation correction
-- [ ] Update camera quaternion in `useFrame`
-- [ ] Add fallback for desktop (no sensors)
+- [x] Apply camera orientation correction
+- [x] Update camera quaternion in `useFrame`
+- [x] Add fallback for desktop (no sensors)
 - [ ] Test on mobile device (verify alignment)
-- [ ] Document coordinate system transformations
+- [x] Document coordinate system transformations
 
 **Reference**: CLAUDE.md lines 75-82, README.md camera section
 **Estimated Effort**: 5-6 hours
 **Dependencies**: HP-1.2 (useDeviceOrientation)
+**Status**: ✅ Complete (tests passing, mobile testing pending)
 
 ---
 
@@ -978,17 +979,17 @@ None (no implementation to have bugs yet)
 
 Use this checklist to track overall project completion:
 
-### Phase 1: MVP ☑️ 6/14
+### Phase 1: MVP ☑️ 7/14
 - ✅ CRIT-1: Development environment
 - ✅ CRIT-2: Test infrastructure
 - ✅ CRIT-3: Star catalog data
 - ✅ HP-1.1: useGPS hook
 - ✅ HP-1.2: useDeviceOrientation hook
 - ✅ HP-9: Overlay component
+- ✅ HP-5: CameraController
 - ⬜ HP-2: astronomy.ts library
 - ⬜ HP-3: Zustand store
 - ⬜ HP-4: Scene component
-- ⬜ HP-5: CameraController
 - ⬜ HP-6: StarField
 - ⬜ HP-7: CelestialSphere
 - ⬜ HP-8: Planets
@@ -1022,11 +1023,11 @@ Use this checklist to track overall project completion:
 ---
 
 **Total Tasks**: 44
-**Completed**: 6
+**Completed**: 7
 **In Progress**: 0
-**Not Started**: 38
+**Not Started**: 37
 
-**Overall Completion**: 13.6%
+**Overall Completion**: 15.9%
 
 ---
 
