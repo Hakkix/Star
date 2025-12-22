@@ -68,7 +68,9 @@ export default function Navigation() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/ar', label: 'AR Experience' },
+    { href: '/about', label: 'About' },
     { href: '/help', label: 'Help' },
+    { href: '/settings', label: 'Settings' },
   ]
 
   return (
@@ -105,15 +107,6 @@ export default function Navigation() {
               {link.label}
             </Link>
           ))}
-
-          {/* Help Button */}
-          <button className={styles.helpButton} aria-label="Help">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg>
-          </button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -150,14 +143,6 @@ export default function Navigation() {
                 {link.label}
               </Link>
             ))}
-            <button className={styles.mobileHelpButton}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                <line x1="12" y1="17" x2="12.01" y2="17" />
-              </svg>
-              <span>Help</span>
-            </button>
           </div>
         </>
       )}
