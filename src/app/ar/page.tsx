@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
+import Link from 'next/link'
 import { useDeviceOrientation } from '@/hooks/useDeviceOrientation'
 import { useGPS } from '@/hooks/useGPS'
 import { Overlay } from '@/components/dom/Overlay'
@@ -62,6 +63,53 @@ export default function ARExperience() {
 
   return (
     <>
+      {/* Back Button - Floating top-left */}
+      <Link
+        href="/"
+        style={{
+          position: 'fixed',
+          top: '1rem',
+          left: '1rem',
+          zIndex: 30,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          padding: '0.75rem 1.25rem',
+          background: 'rgba(0, 0, 0, 0.8)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '50px',
+          color: 'white',
+          fontSize: '0.9rem',
+          fontWeight: '500',
+          textDecoration: 'none',
+          transition: 'all 0.3s ease',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(102, 126, 234, 0.3)'
+          e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.5)'
+          e.currentTarget.style.transform = 'translateX(-2px)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+          e.currentTarget.style.transform = 'translateX(0)'
+        }}
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          style={{ width: '18px', height: '18px' }}
+        >
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        <span>Back to Home</span>
+      </Link>
+
       {/* 3D Scene Canvas */}
       <Suspense fallback={
         <div style={{

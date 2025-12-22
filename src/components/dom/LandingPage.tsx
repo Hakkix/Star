@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import FAQ from './FAQ'
 import styles from './LandingPage.module.css'
 
 export default function LandingPage() {
@@ -271,6 +272,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQ />
 
       {/* CTA Section */}
       <section className={styles.cta}>
