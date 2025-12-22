@@ -50,13 +50,16 @@ export default function ARExperience() {
   // GPS hook for celestial alignment
   const {
     error: gpsError,
-    loading: gpsLoading
+    loading: gpsLoading,
+    isFallback: gpsIsFallback
   } = useGPS()
 
   // Determine overall permission state
   const permissionGranted = orientationPermission === 'granted'
-  const hasError = orientationError || gpsError
-  const errorMessage = orientationError || (gpsError ? gpsError.message : null)
+  // Only show orientation errors as blocking errors
+  // GPS errors are handled with fallback location
+  const hasError = !!orientationError
+  const errorMessage = orientationError
 
   return (
     <>
@@ -95,6 +98,30 @@ export default function ARExperience() {
           errorMessage={errorMessage}
         />
       </div>
+
+      {/* GPS Fallback Warning - Non-blocking */}
+      {gpsIsFallback && permissionGranted && !hasError && (
+        <div style={{
+          position: 'fixed',
+          top: '1rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: 'rgba(255, 152, 0, 0.9)',
+          color: '#000',
+          padding: '0.75rem 1.5rem',
+          borderRadius: '0.5rem',
+          zIndex: 20,
+          fontSize: '0.875rem',
+          fontWeight: '500',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+          textAlign: 'center',
+          maxWidth: '90%',
+          pointerEvents: 'none'
+        }}>
+          Using default location (San Francisco).{' '}
+          {gpsError?.code === 1 ? 'Location permission denied.' : 'Unable to get your location.'}
+        </div>
+      )}
 
       {/* Detail Overlay for Selected Celestial Bodies */}
       <DetailOverlay />

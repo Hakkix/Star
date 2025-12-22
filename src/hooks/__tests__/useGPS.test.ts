@@ -28,6 +28,7 @@ describe('useGPS Hook', () => {
     expect(result.current.loading).toBe(true);
     expect(result.current.latitude).toBeNull();
     expect(result.current.longitude).toBeNull();
+    expect(result.current.isFallback).toBe(false);
   });
 
   test('successfully retrieves GPS coordinates', async () => {
@@ -44,9 +45,10 @@ describe('useGPS Hook', () => {
     expect(result.current.longitude).toBe(-74.006);
     expect(result.current.accuracy).toBe(10);
     expect(result.current.error).toBeNull();
+    expect(result.current.isFallback).toBe(false);
   });
 
-  test('handles permission denied error', async () => {
+  test('handles permission denied error with fallback location', async () => {
     const error = createGeolocationError(1, 'User denied geolocation');
     mockGeolocation({ latitude: 0, longitude: 0 }, { error });
 
@@ -58,11 +60,13 @@ describe('useGPS Hook', () => {
 
     expect(result.current.error).toBeTruthy();
     expect(result.current.error?.code).toBe(1); // PERMISSION_DENIED
-    expect(result.current.latitude).toBeNull();
-    expect(result.current.longitude).toBeNull();
+    // Should use fallback location (San Francisco)
+    expect(result.current.latitude).toBe(37.7749);
+    expect(result.current.longitude).toBe(-122.4194);
+    expect(result.current.isFallback).toBe(true);
   });
 
-  test('handles position unavailable error', async () => {
+  test('handles position unavailable error with fallback location', async () => {
     const error = createGeolocationError(2, 'Position unavailable');
     mockGeolocation({ latitude: 0, longitude: 0 }, { error });
 
@@ -74,9 +78,13 @@ describe('useGPS Hook', () => {
 
     expect(result.current.error).toBeTruthy();
     expect(result.current.error?.code).toBe(2); // POSITION_UNAVAILABLE
+    // Should use fallback location (San Francisco)
+    expect(result.current.latitude).toBe(37.7749);
+    expect(result.current.longitude).toBe(-122.4194);
+    expect(result.current.isFallback).toBe(true);
   });
 
-  test('handles timeout error', async () => {
+  test('handles timeout error with fallback location', async () => {
     const error = createGeolocationError(3, 'Timeout');
     mockGeolocation({ latitude: 0, longitude: 0 }, { error });
 
@@ -88,6 +96,10 @@ describe('useGPS Hook', () => {
 
     expect(result.current.error).toBeTruthy();
     expect(result.current.error?.code).toBe(3); // TIMEOUT
+    // Should use fallback location (San Francisco)
+    expect(result.current.latitude).toBe(37.7749);
+    expect(result.current.longitude).toBe(-122.4194);
+    expect(result.current.isFallback).toBe(true);
   });
 
   test('handles coordinates with high accuracy', async () => {
@@ -171,7 +183,7 @@ describe('useGPS Hook', () => {
 });
 
 describe('useGPS Hook - Browser Compatibility', () => {
-  test('handles missing geolocation API', async () => {
+  test('handles missing geolocation API with fallback location', async () => {
     // Don't mock geolocation (simulate unsupported browser)
     const originalGeolocation = navigator.geolocation;
     Object.defineProperty(navigator, 'geolocation', {
@@ -185,6 +197,11 @@ describe('useGPS Hook - Browser Compatibility', () => {
       expect(result.current.loading).toBe(false);
       expect(result.current.error).toBeTruthy();
     });
+
+    // Should use fallback location (San Francisco)
+    expect(result.current.latitude).toBe(37.7749);
+    expect(result.current.longitude).toBe(-122.4194);
+    expect(result.current.isFallback).toBe(true);
 
     // Restore
     Object.defineProperty(navigator, 'geolocation', {

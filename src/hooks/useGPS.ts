@@ -19,6 +19,18 @@ export type GPSState = {
   error: GeolocationPositionError | null;
   /** Whether the hook is currently fetching position */
   loading: boolean;
+  /** Whether the current location is a fallback (not actual GPS) */
+  isFallback: boolean;
+};
+
+/**
+ * Default fallback location when GPS is unavailable or denied
+ * Using San Francisco, CA as a reasonable default for celestial observations
+ */
+const FALLBACK_LOCATION = {
+  latitude: 37.7749,
+  longitude: -122.4194,
+  accuracy: null,
 };
 
 /**
@@ -63,16 +75,19 @@ export function useGPS(): GPSState {
     accuracy: null,
     error: null,
     loading: true,
+    isFallback: false,
   });
 
   useEffect(() => {
     // Check if geolocation is supported
     if (!navigator.geolocation) {
-      setState((prev) => ({
-        ...prev,
-        loading: false,
+      // Use fallback location when geolocation is not supported
+      setState({
+        ...FALLBACK_LOCATION,
         error: createGeolocationError(2, 'Geolocation not supported'),
-      }));
+        loading: false,
+        isFallback: true,
+      });
       return;
     }
 
@@ -85,14 +100,17 @@ export function useGPS(): GPSState {
           accuracy: position.coords.accuracy,
           error: null,
           loading: false,
+          isFallback: false,
         });
       },
       (error) => {
-        setState((prev) => ({
-          ...prev,
+        // Use fallback location when permission is denied or other errors occur
+        setState({
+          ...FALLBACK_LOCATION,
           error,
           loading: false,
-        }));
+          isFallback: true,
+        });
       }
     );
   }, []);
