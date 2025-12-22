@@ -65,7 +65,7 @@ export function OnboardingTutorial({
       if (!completed) {
         setIsVisible(true);
       }
-    } catch (error) {
+    } catch {
       // localStorage not available, show tutorial anyway
       setIsVisible(true);
     }
