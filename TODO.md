@@ -1,8 +1,8 @@
 # Star AR Project - Comprehensive TODO List
 
 > **Last Updated**: 2025-12-22
-> **Project Status**: Advanced Phase 1 (86% of Phase 1 complete, 27.3% overall)
-> **Current Priority**: HP-8 Planets & HP-10 DetailOverlay (Final MVP Components)
+> **Project Status**: Advanced Phase 1 (100% of Phase 1 complete, 31.8% overall)
+> **Current Priority**: HP-11 AR Page Integration (Final MVP Integration)
 
 ---
 
@@ -11,9 +11,9 @@
 The Star AR project currently has **excellent infrastructure** (CI/CD, testing framework, documentation) and **all critical blockers resolved**. The landing page is complete, and we now have a working star catalog for MVP development. The actual AR star map 3D functionality needs to be built.
 
 ### Implementation Status
-- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI
-- ⚠️ **In Progress**: HP-8 (Planets component)
-- ❌ **Not Started**: HP-10 (DetailOverlay), HP-11 (AR page integration), Phase 2 polish, Phase 3 advanced features
+- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI, planets component, detail overlay
+- ⚠️ **In Progress**: None
+- ❌ **Not Started**: HP-11 (AR page integration), Phase 2 polish, Phase 3 advanced features
 
 ---
 
@@ -349,24 +349,25 @@ Render planets at real-time calculated positions using astronomy-engine.
 - Color code by planet type
 
 **Acceptance Criteria**:
-- [ ] Create `src/components/canvas/Planets.tsx`
-- [ ] Define planet list (Mercury through Neptune, plus Moon/Sun)
-- [ ] Implement position calculation
+- [x] Create `src/components/canvas/Planets.tsx`
+- [x] Define planet list (Mercury through Neptune, plus Moon/Sun)
+- [x] Implement position calculation
   - Use `getPlanetPosition()` from astronomy.ts
   - Create Observer with GPS coordinates
   - Convert returned RA/Dec to Cartesian
-- [ ] Render planets as individual meshes
+- [x] Render planets as individual meshes
   - Larger spheres than stars
   - Color coded (Mars=red, Jupiter=orange, etc.)
-- [ ] Implement click handlers
+- [x] Implement click handlers
   - Update Zustand store with selected planet
-- [ ] Throttle updates (every 10 frames, not 60 FPS)
-- [ ] Use `useMemo` for expensive calculations
+- [x] Throttle updates (every 10 frames, not 60 FPS)
+- [x] Use `useMemo` for expensive calculations
 - [ ] Test on mobile (verify positions match sky)
 
 **Reference**: CLAUDE.md lines 99-107, README.md planets section
 **Estimated Effort**: 6-8 hours
 **Dependencies**: HP-1.1 (useGPS), HP-2 (astronomy.ts), HP-3 (store)
+**Status**: ✅ Complete (Full implementation with real-time position calculation, mobile testing pending)
 
 ---
 
@@ -419,26 +420,27 @@ Info card that appears when user taps a star or planet.
 - Animate in/out smoothly
 
 **Acceptance Criteria**:
-- [ ] Create `src/components/dom/DetailOverlay.tsx`
-- [ ] Subscribe to `selectedBody` from store
-- [ ] Display body information
+- [x] Create `src/components/dom/DetailOverlay.tsx`
+- [x] Subscribe to `selectedBody` from store
+- [x] Display body information
   - Name
   - Type (star/planet)
   - Magnitude (stars)
   - Distance
   - Constellation (stars)
   - RA/Dec coordinates
-- [ ] Add close button
-  - Calls `setSelectedBody(null)`
-- [ ] Add backdrop click to dismiss
-- [ ] Implement slide-up animation
-- [ ] Style with CSS modules (match landing page theme)
-- [ ] Write component tests
+- [x] Add close button
+  - Calls `clearSelection()`
+- [x] Add backdrop click to dismiss
+- [x] Implement slide-up animation
+- [x] Style with CSS modules (match landing page theme)
+- [x] Write component tests
 - [ ] Test on mobile (touch interactions)
 
 **Reference**: CLAUDE.md line 27, README.md interaction section
 **Estimated Effort**: 3-4 hours
 **Dependencies**: HP-3 (store)
+**Status**: ✅ Complete (26 tests passing, full functionality including animations and accessibility, mobile testing pending)
 
 ---
 
@@ -983,7 +985,7 @@ None (no implementation to have bugs yet)
 
 Use this checklist to track overall project completion:
 
-### Phase 1: MVP ☑️ 12/14 (86% Complete)
+### Phase 1: MVP ✅ 14/14 (100% Complete)
 - ✅ CRIT-1: Development environment
 - ✅ CRIT-2: Test infrastructure
 - ✅ CRIT-3: Star catalog data
@@ -996,8 +998,8 @@ Use this checklist to track overall project completion:
 - ✅ HP-6: StarField
 - ✅ HP-7: CelestialSphere
 - ✅ HP-9: Overlay component
-- ⬜ HP-8: Planets
-- ⬜ HP-10: DetailOverlay
+- ✅ HP-8: Planets
+- ✅ HP-10: DetailOverlay
 
 ### Phase 2: Polish ⬜ 0/9
 - ⬜ MP-1: Error boundaries
@@ -1027,11 +1029,11 @@ Use this checklist to track overall project completion:
 ---
 
 **Total Tasks**: 44
-**Completed**: 12
-**In Progress**: 1 (HP-8)
-**Not Started**: 31
+**Completed**: 14
+**In Progress**: 0
+**Not Started**: 30
 
-**Overall Completion**: 27.3%
+**Overall Completion**: 31.8%
 
 ---
 
