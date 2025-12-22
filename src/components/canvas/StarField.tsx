@@ -78,6 +78,8 @@ export default function StarField() {
     const dummy = new THREE.Object3D();
     const mesh = meshRef.current;
 
+    console.log(`Initializing ${stars.length} stars in InstancedMesh`);
+
     stars.forEach((star, i) => {
       // Set position
       dummy.position.set(star.position.x, star.position.y, star.position.z);
@@ -92,6 +94,7 @@ export default function StarField() {
 
     // Mark for update
     mesh.instanceMatrix.needsUpdate = true;
+    console.log('Stars initialized successfully');
   }, [stars]);
 
   // Optional: Subtle twinkle effect (can be disabled for performance)
