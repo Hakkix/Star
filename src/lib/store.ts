@@ -39,6 +39,11 @@ export interface GPSData {
 export type PermissionState = 'granted' | 'denied' | 'prompt' | 'unsupported';
 
 /**
+ * Onboarding steps
+ */
+export type OnboardingStep = 'welcome' | 'location' | 'orientation' | 'ready' | 'completed';
+
+/**
  * Store state interface
  */
 interface StarStoreState {
@@ -49,6 +54,10 @@ interface StarStoreState {
   // Device Orientation
   orientation: DeviceOrientationData | null;
   orientationPermission: PermissionState;
+
+  // Onboarding
+  onboardingStep: OnboardingStep;
+  hasCompletedOnboarding: boolean;
 
   // Selected Celestial Body
   selectedBody: CelestialBodyData | null;
@@ -69,6 +78,10 @@ interface StarStoreState {
   setOrientation: (alpha: number, beta: number, gamma: number) => void;
   clearOrientation: () => void;
   setOrientationPermission: (permission: PermissionState) => void;
+
+  setOnboardingStep: (step: OnboardingStep) => void;
+  completeOnboarding: () => void;
+  resetOnboarding: () => void;
 
   selectCelestialBody: (body: CelestialBodyData) => void;
   clearSelection: () => void;
@@ -92,6 +105,8 @@ const initialState = {
   gpsPermission: 'prompt' as PermissionState,
   orientation: null,
   orientationPermission: 'prompt' as PermissionState,
+  onboardingStep: 'welcome' as OnboardingStep,
+  hasCompletedOnboarding: false,
   selectedBody: null,
   isLoading: false,
   errorMessage: null,
@@ -146,6 +161,24 @@ export const useStarStore = create<StarStoreState>()(
           'setOrientationPermission'
         ),
 
+      // Onboarding Actions
+      setOnboardingStep: (step) =>
+        set({ onboardingStep: step }, false, 'setOnboardingStep'),
+
+      completeOnboarding: () =>
+        set(
+          { hasCompletedOnboarding: true, onboardingStep: 'completed' },
+          false,
+          'completeOnboarding'
+        ),
+
+      resetOnboarding: () =>
+        set(
+          { hasCompletedOnboarding: false, onboardingStep: 'welcome' },
+          false,
+          'resetOnboarding'
+        ),
+
       // Selection Actions
       selectCelestialBody: (body) =>
         set({ selectedBody: body }, false, 'selectCelestialBody'),
@@ -198,6 +231,10 @@ export const useSelectedBody = () => useStarStore((state) => state.selectedBody)
 export const usePermissions = () => useStarStore((state) => ({
   gps: state.gpsPermission,
   orientation: state.orientationPermission,
+}));
+export const useOnboarding = () => useStarStore((state) => ({
+  step: state.onboardingStep,
+  hasCompleted: state.hasCompletedOnboarding,
 }));
 export const useUIState = () => useStarStore((state) => ({
   isLoading: state.isLoading,
