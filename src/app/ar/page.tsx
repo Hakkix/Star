@@ -50,7 +50,6 @@ export default function ARExperience() {
   // GPS hook for celestial alignment
   const {
     error: gpsError,
-    loading: gpsLoading,
     isFallback: gpsIsFallback
   } = useGPS()
 
