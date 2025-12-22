@@ -3,6 +3,8 @@
  * Handles coordinate conversions and celestial calculations
  */
 
+import * as Astronomy from 'astronomy-engine';
+
 /**
  * Cartesian coordinates in 3D space
  */
@@ -10,6 +12,25 @@ export type CartesianCoords = {
   x: number;
   y: number;
   z: number;
+};
+
+/**
+ * Observer location for astronomical calculations
+ */
+export type ObserverLocation = {
+  latitude: number;
+  longitude: number;
+  altitude?: number;
+};
+
+/**
+ * Planet position data with equatorial coordinates
+ */
+export type PlanetPositionData = {
+  name: string;
+  ra: number;
+  dec: number;
+  dist: number;
 };
 
 /**
@@ -67,4 +88,45 @@ export function calculateLST(date: Date, longitude: number): number {
   const lst = (gmst + longitude) % 360;
 
   return lst;
+}
+
+/**
+ * Gets the position of a planet or celestial body at a given date and observer location
+ *
+ * @param bodyName - Name of the celestial body (e.g., 'Sun', 'Moon', 'Mars', 'Jupiter')
+ * @param date - The date/time to calculate position for
+ * @param observer - Observer's location {latitude, longitude, altitude}
+ * @returns Planet position with Right Ascension, Declination, and distance
+ *
+ * Note: This wraps astronomy-engine's Equator() function for easy integration
+ * Supported bodies: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto
+ */
+export function getPlanetPosition(
+  bodyName: Astronomy.Body,
+  date: Date,
+  observer: ObserverLocation
+): PlanetPositionData {
+  // Create astronomy-engine Observer
+  const astroObserver = new Astronomy.Observer(
+    observer.latitude,
+    observer.longitude,
+    observer.altitude || 0
+  );
+
+  // Calculate equatorial coordinates
+  // Parameters: body, date, observer, ofdate (true for date coordinates), aberration (true)
+  const equPoint = Astronomy.Equator(
+    bodyName,
+    date,
+    astroObserver,
+    true,
+    true
+  );
+
+  return {
+    name: bodyName,
+    ra: equPoint.ra,
+    dec: equPoint.dec,
+    dist: equPoint.dist,
+  };
 }
