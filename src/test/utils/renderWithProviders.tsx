@@ -3,25 +3,38 @@
  */
 
 import { render, RenderOptions } from '@testing-library/react';
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
+import { useStarStore } from '@/lib/store';
 
 /**
  * Custom render function that wraps components with necessary providers
- * Currently just a wrapper, but can be extended with Zustand stores, etc.
+ * Includes Zustand store cleanup between tests
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   // Add custom options here if needed (e.g., initialStoreState)
 }
 
+/**
+ * Component that resets the Zustand store after unmounting
+ * This ensures tests don't have state pollution
+ */
+function StoreCleanup() {
+  const reset = useStarStore((state) => state.reset);
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
+
+  return null;
+}
+
 function AllTheProviders({ children }: { children: ReactNode }) {
   return (
     <>
-      {/* Add providers here when needed, e.g.:
-        <StoreProvider initialState={...}>
-          {children}
-        </StoreProvider>
-      */}
+      <StoreCleanup />
       {children}
     </>
   );
