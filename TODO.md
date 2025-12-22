@@ -1,8 +1,8 @@
 # Star AR Project - Comprehensive TODO List
 
 > **Last Updated**: 2025-12-22
-> **Project Status**: Phase 1 MVP Complete, UX Phase 2 Mostly Complete (22.9% overall)
-> **Current Priority**: UX Phase 3 - AR Experience Enhancements
+> **Project Status**: Phase 1 MVP Complete, UX Phases 1-3 Complete (27.7% overall)
+> **Current Priority**: UX Phase 4 - New Pages (About, Help, Settings)
 
 ---
 
@@ -11,9 +11,9 @@
 The Star AR project currently has **excellent infrastructure** (CI/CD, testing framework, documentation) and **all critical blockers resolved**. The landing page is complete, and we now have a working star catalog for MVP development. The actual AR star map 3D functionality needs to be built.
 
 ### Implementation Status
-- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI, planets component, detail overlay, AR page integration (HP-11), UX-1 navigation system (5/5), UX-2 landing page enhancements (3/4 sub-tasks)
+- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI, planets component, detail overlay, AR page integration (HP-11), UX-1 navigation system (5/5), UX-2 landing page enhancements (3/4 sub-tasks), UX-3 AR experience enhancements (4/4 sub-tasks)
 - ⚠️ **In Progress**: None
-- ❌ **Not Started**: UX-2.2 interactive demo (deferred), UX Phase 3-6, Phase 2 polish, Phase 3 advanced features
+- ❌ **Not Started**: UX-2.2 interactive demo (deferred), UX Phase 4-6, Phase 2 polish, Phase 3 advanced features
 
 ---
 
@@ -736,65 +736,75 @@ Based on MASTERPAGE_UX_PLAN.md - Comprehensive enhancements to improve user enga
 
 ---
 
-### UX-3: AR Experience Enhancements (Phase 3)
+### UX-3: AR Experience Enhancements (Phase 3) ✅ 4/4 Complete
 
-#### UX-3.1: Onboarding Tutorial
-- [ ] Create `components/dom/OnboardingTutorial.tsx`
-- [ ] First-time user overlay tutorial
-- [ ] "Swipe to dismiss" or "Next" progression
-- [ ] Key steps:
-  - Point your device at the sky
-  - Tap any star to learn more
-  - Move your device to explore
-- [ ] "Skip tutorial" option
-- [ ] "Don't show again" checkbox
-- [ ] Use localStorage to track completion
+#### UX-3.1: Onboarding Tutorial ✅
+- [x] Enhanced existing `OnboardingFlow.tsx` component
+- [x] Multi-step tutorial (welcome → location → orientation → ready)
+- [x] Step indicators and animations
+- [x] "Skip tutorial" button on all steps
+- [x] localStorage persistence for completion state
+- [x] Auto-load completion state on mount
 
+**Status**: ✅ Complete (2025-12-22)
 **Estimated Effort**: 4-5 hours
+**Implementation**: Enhanced OnboardingFlow with skip functionality and localStorage
 
 ---
 
-#### UX-3.2: In-App Help Overlay
-- [ ] Create `components/dom/HelpButton.tsx`
-- [ ] Create `components/dom/HelpOverlay.tsx`
-- [ ] Floating "?" button in bottom-right
-- [ ] Help overlay content:
+#### UX-3.2: In-App Help Overlay ✅
+- [x] Create `components/dom/HelpButton.tsx`
+- [x] Create `components/dom/HelpOverlay.tsx`
+- [x] Floating "?" button in bottom-right
+- [x] Help overlay content:
   - Quick tips
   - Keyboard shortcuts
   - Troubleshooting
   - Link to full documentation
-- [ ] Dismissible without blocking AR view
+  - Device compatibility
+- [x] Dismissible without blocking AR view
+- [x] Integrated into AR page
 
+**Status**: ✅ Complete (2025-12-22)
 **Estimated Effort**: 3-4 hours
 
 ---
 
-#### UX-3.3: Enhanced Detail Overlay
-Current DetailOverlay is basic. Enhance with:
-- [ ] Add image/illustration of celestial body
-- [ ] Wikipedia excerpt or description
-- [ ] "Learn more" external link
-- [ ] Share button (copy coordinates/name)
-- [ ] Favorite/bookmark button (localStorage)
-- [ ] Navigation arrows (next/previous star)
+#### UX-3.3: Enhanced Detail Overlay ✅
+Current DetailOverlay enhanced with:
+- [x] Description for each celestial body
+- [x] "Learn more" external link (Wikipedia)
+- [x] Share button (copy coordinates/name to clipboard)
+- [x] Favorite/bookmark button (localStorage)
+- [x] Copy success feedback
+- [ ] Navigation arrows (next/previous star) - deferred
+- [ ] Images/illustrations - deferred
 
+**Status**: ✅ Complete (2025-12-22)
 **Estimated Effort**: 4-5 hours
+**Note**: Navigation arrows and images deferred to future enhancement
 
 ---
 
-#### UX-3.4: AR UI Controls (NEW)
-- [ ] Create `components/dom/ARControls.tsx`
-- [ ] Bottom control bar with:
-  - Time slider (travel forward/backward in time)
-  - Constellation lines toggle
-  - Star labels toggle
-  - Night mode filter toggle
-  - Screenshot button
-  - Settings gear icon
-- [ ] Semi-transparent floating bar (glass morphism)
-- [ ] 60px height, rounded corners, centered at bottom
+#### UX-3.4: AR UI Controls ✅
+- [x] Create `components/dom/ARControls.tsx`
+- [x] Bottom control bar with:
+  - [x] Constellation lines toggle
+  - [x] Planets toggle
+  - [x] Calibrate button (with tips)
+  - [x] Settings gear icon (placeholder)
+  - [ ] Time slider - deferred to LP-3
+  - [ ] Star labels toggle - deferred
+  - [ ] Night mode filter - deferred
+  - [ ] Screenshot button - deferred to LP-6
+- [x] Semi-transparent floating bar (glass morphism)
+- [x] Rounded corners, centered at bottom
+- [x] Responsive design (hides text labels on mobile)
+- [x] Integrated into AR page
 
+**Status**: ✅ Complete (2025-12-22)
 **Estimated Effort**: 6-8 hours
+**Note**: Advanced features deferred to Low Priority tasks
 
 ---
 
@@ -1206,17 +1216,19 @@ Based on MASTERPAGE_UX_PLAN.md - phased approach to enhance user experience.
 
 ---
 
-### UX Phase 3: AR Experience (Week 3)
+### UX Phase 3: AR Experience (Week 3) - ✅ 100% Complete
 **Priority: MEDIUM**
 **Goal**: Improve in-app experience and onboarding
 
-- [ ] Onboarding tutorial
-- [ ] Enhanced detail overlay
-- [ ] AR controls bar
-- [ ] Help overlay
+- [x] Onboarding tutorial (enhanced OnboardingFlow)
+- [x] Enhanced detail overlay
+- [x] AR controls bar
+- [x] Help overlay
 
+**Status**: ✅ Complete (2025-12-22)
 **Deliverable**: Polished AR experience with guided onboarding
 **Estimated Effort**: 2-3 days
+**Completion Date**: 2025-12-22
 
 ---
 
@@ -1438,14 +1450,18 @@ Use this checklist to track overall project completion:
 - ⬜ LP-5: Search & filter
 - ⬜ LP-6: Screenshot mode
 
-### UI/UX Enhancements ✅ 8/39 (20.5% Complete)
+### UI/UX Enhancements ✅ 12/39 (30.8% Complete)
 - ✅ UX-1: Navigation System (5/5 complete) ✅
 - ⏸️ UX-2: Enhanced Landing Page (3/4 sub-tasks, 75% complete)
   - ✅ UX-2.1: Hero section improvements
   - ⏸️ UX-2.2: Interactive demo (deferred)
   - ✅ UX-2.3: Social proof section
   - ✅ UX-2.4: FAQ section
-- ⬜ UX-3: AR Experience Enhancements (0/4 sub-tasks)
+- ✅ UX-3: AR Experience Enhancements (4/4 sub-tasks) ✅
+  - ✅ UX-3.1: Onboarding tutorial (enhanced)
+  - ✅ UX-3.2: Help overlay
+  - ✅ UX-3.3: Enhanced detail overlay
+  - ✅ UX-3.4: AR controls bar
 - ⬜ UX-4: New Pages (0/3 sub-tasks)
 - ⬜ UX-5: Engagement Features (0/2 sub-tasks)
 - ⬜ UX-6: Accessibility (0/4 sub-tasks)
@@ -1462,11 +1478,11 @@ Use this checklist to track overall project completion:
 ---
 
 **Total Tasks**: 83
-**Completed**: 19
+**Completed**: 23
 **In Progress**: 0
-**Not Started**: 64
+**Not Started**: 60
 
-**Overall Completion**: 22.9% (Phase 1 MVP: 100%, UX: 20.5%, Other: 0%)
+**Overall Completion**: 27.7% (Phase 1 MVP: 100%, UX: 30.8%, Other: 0%)
 
 ---
 

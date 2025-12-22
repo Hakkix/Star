@@ -38,6 +38,14 @@ export function OnboardingFlow({
   const [isAnimating, setIsAnimating] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
+  // Load onboarding completion state from localStorage on mount
+  useEffect(() => {
+    const hasCompletedBefore = localStorage.getItem('star-onboarding-completed') === 'true';
+    if (hasCompletedBefore) {
+      completeOnboarding();
+    }
+  }, [completeOnboarding]);
+
   // Auto-advance to ready when both permissions are granted
   useEffect(() => {
     if (hasGPSPermission && hasOrientationPermission && onboardingStep !== 'ready' && onboardingStep !== 'completed') {
@@ -91,7 +99,14 @@ export function OnboardingFlow({
     transitionToStep('completed');
     setTimeout(() => {
       completeOnboarding();
+      localStorage.setItem('star-onboarding-completed', 'true');
     }, 300);
+  };
+
+  // Handle skip tutorial
+  const handleSkip = () => {
+    completeOnboarding();
+    localStorage.setItem('star-onboarding-completed', 'true');
   };
 
   // Container styles
@@ -202,6 +217,19 @@ export function OnboardingFlow({
     fontSize: '0.875rem',
   };
 
+  const skipButtonStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: '1.5rem',
+    right: '1.5rem',
+    background: 'transparent',
+    border: 'none',
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontSize: '0.875rem',
+    cursor: 'pointer',
+    padding: '0.5rem 1rem',
+    transition: 'color 0.2s ease',
+  };
+
   // Step indicators
   const renderStepIndicator = () => {
     const steps = ['welcome', 'location', 'orientation', 'ready'];
@@ -220,6 +248,18 @@ export function OnboardingFlow({
   if (onboardingStep === 'welcome') {
     return (
       <div style={containerStyle}>
+        <button
+          onClick={handleSkip}
+          style={skipButtonStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#ffffff';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+          }}
+        >
+          Skip Tutorial →
+        </button>
         <div style={contentStyle}>
           {renderStepIndicator()}
           <div style={iconStyle}>✨</div>
@@ -262,6 +302,18 @@ export function OnboardingFlow({
   if (onboardingStep === 'location') {
     return (
       <div style={containerStyle}>
+        <button
+          onClick={handleSkip}
+          style={skipButtonStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#ffffff';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+          }}
+        >
+          Skip Tutorial →
+        </button>
         <div style={contentStyle}>
           {renderStepIndicator()}
           <div style={iconStyle}>📍</div>
@@ -319,6 +371,18 @@ export function OnboardingFlow({
   if (onboardingStep === 'orientation') {
     return (
       <div style={containerStyle}>
+        <button
+          onClick={handleSkip}
+          style={skipButtonStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#ffffff';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+          }}
+        >
+          Skip Tutorial →
+        </button>
         <div style={contentStyle}>
           {renderStepIndicator()}
           <div style={iconStyle}>📱</div>

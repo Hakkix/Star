@@ -1,12 +1,15 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import Link from 'next/link'
 import { useDeviceOrientation } from '@/hooks/useDeviceOrientation'
 import { useGPS } from '@/hooks/useGPS'
 import { OnboardingFlow } from '@/components/dom/OnboardingFlow'
 import { DetailOverlay } from '@/components/dom/DetailOverlay'
+import { HelpButton } from '@/components/dom/HelpButton'
+import { HelpOverlay } from '@/components/dom/HelpOverlay'
+import { ARControls } from '@/components/dom/ARControls'
 import { useStarStore } from '@/lib/store'
 
 /**
@@ -44,6 +47,9 @@ const Scene = dynamic(() => import('@/components/canvas/Scene'), {
 export default function ARExperience() {
   // Store hooks
   const { hasCompletedOnboarding } = useStarStore();
+
+  // Help overlay state
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   // Device orientation hook for camera control
   const {
@@ -170,6 +176,30 @@ export default function ARExperience() {
 
       {/* Detail Overlay for Selected Celestial Bodies */}
       <DetailOverlay />
+
+      {/* AR Controls (when onboarding complete) */}
+      {hasCompletedOnboarding && (
+        <ARControls
+          onSettingsClick={() => {
+            // Future: Open settings modal
+            console.log('Settings clicked - to be implemented')
+          }}
+        />
+      )}
+
+      {/* Help Button and Overlay */}
+      {hasCompletedOnboarding && (
+        <>
+          <HelpButton
+            onClick={() => setIsHelpOpen(!isHelpOpen)}
+            isOpen={isHelpOpen}
+          />
+          <HelpOverlay
+            isVisible={isHelpOpen}
+            onClose={() => setIsHelpOpen(false)}
+          />
+        </>
+      )}
     </>
   )
 }
