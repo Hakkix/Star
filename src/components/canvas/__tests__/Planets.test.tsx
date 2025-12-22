@@ -42,6 +42,7 @@ describe('Planets Component', () => {
       accuracy: 10,
       error: null,
       loading: false,
+        isFallback: false,
     })
 
     // Mock planet positions
@@ -94,6 +95,7 @@ describe('Planets Component', () => {
         TIMEOUT: 3,
       } as GeolocationPositionError,
       loading: false,
+        isFallback: false,
     })
 
     const { container } = render(
@@ -125,6 +127,7 @@ describe('Planets Component', () => {
       accuracy: 10,
       error: null,
       loading: false,
+        isFallback: false,
     })
 
     const { container } = render(
@@ -144,6 +147,7 @@ describe('Planets Component', () => {
       accuracy: null,
       error: null,
       loading: false,
+        isFallback: false,
     })
 
     const { container } = render(
@@ -186,6 +190,7 @@ describe('Planets Component', () => {
       accuracy: null,
       error: null,
       loading: true,
+        isFallback: false,
     })
 
     const { container } = render(
@@ -211,6 +216,7 @@ describe('Planets Component', () => {
         TIMEOUT: 3,
       } as GeolocationPositionError,
       loading: false,
+        isFallback: false,
     })
 
     const { container } = render(

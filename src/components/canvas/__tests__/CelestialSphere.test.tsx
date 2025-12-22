@@ -53,6 +53,7 @@ describe('CelestialSphere', () => {
         accuracy: null,
         error: null,
         loading: true,
+        isFallback: false,
       });
 
       const { container } = render(
@@ -72,6 +73,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       const { container } = render(
@@ -94,6 +96,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       const { container } = render(
@@ -113,6 +116,7 @@ describe('CelestialSphere', () => {
         accuracy: null,
         error: null,
         loading: true,
+        isFallback: false,
       });
 
       const { container } = render(
@@ -135,6 +139,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       const { container } = render(
@@ -161,6 +166,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       vi.mocked(calculateLST).mockReturnValue(0);
@@ -183,6 +189,7 @@ describe('CelestialSphere', () => {
         accuracy: null,
         error: null,
         loading: true,
+        isFallback: false,
       });
 
       vi.mocked(calculateLST).mockReturnValue(0);
@@ -209,6 +216,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       vi.mocked(calculateLST).mockReturnValue(0);
@@ -235,6 +243,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       vi.mocked(calculateLST).mockReturnValue(0);
@@ -261,6 +270,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       vi.mocked(calculateLST).mockReturnValue(0);
@@ -285,6 +295,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       const { container, rerender } = render(
@@ -302,6 +313,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       rerender(
@@ -324,6 +336,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       };
 
       vi.mocked(useGPS).mockReturnValue(mockGPS);
@@ -357,6 +370,7 @@ describe('CelestialSphere', () => {
         accuracy: 10,
         error: null,
         loading: false,
+        isFallback: false,
       };
 
       vi.mocked(useGPS).mockReturnValue(mockGPS);
@@ -393,6 +407,7 @@ describe('CelestialSphere', () => {
         accuracy: null,
         error: null,
         loading: true,
+        isFallback: false,
       });
 
       const { container } = render(
@@ -418,6 +433,7 @@ describe('CelestialSphere', () => {
           TIMEOUT: 3,
         },
         loading: false,
+        isFallback: false,
       });
 
       const { container } = render(
@@ -437,6 +453,7 @@ describe('CelestialSphere', () => {
         accuracy: null,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       const { container } = render(
@@ -457,6 +474,7 @@ describe('CelestialSphere', () => {
         accuracy: null,
         error: null,
         loading: false,
+        isFallback: false,
       });
 
       const { container } = render(
