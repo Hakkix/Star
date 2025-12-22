@@ -25,7 +25,8 @@ describe('useGPS Hook', () => {
 
     const { result } = renderHook(() => useGPS());
 
-    expect(result.current.loading).toBe(true);
+    // Initially, loading should be false until requestPermission is called
+    expect(result.current.loading).toBe(false);
     expect(result.current.latitude).toBeNull();
     expect(result.current.longitude).toBeNull();
     expect(result.current.isFallback).toBe(false);
@@ -36,6 +37,9 @@ describe('useGPS Hook', () => {
     mockGeolocation(coords);
 
     const { result } = renderHook(() => useGPS());
+
+    // Call requestPermission to trigger geolocation
+    await result.current.requestPermission();
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -53,6 +57,9 @@ describe('useGPS Hook', () => {
     mockGeolocation({ latitude: 0, longitude: 0 }, { error });
 
     const { result } = renderHook(() => useGPS());
+
+    // Call requestPermission to trigger geolocation
+    await expect(result.current.requestPermission()).rejects.toThrow();
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -72,6 +79,9 @@ describe('useGPS Hook', () => {
 
     const { result } = renderHook(() => useGPS());
 
+    // Call requestPermission to trigger geolocation
+    await expect(result.current.requestPermission()).rejects.toThrow();
+
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
     });
@@ -89,6 +99,9 @@ describe('useGPS Hook', () => {
     mockGeolocation({ latitude: 0, longitude: 0 }, { error });
 
     const { result } = renderHook(() => useGPS());
+
+    // Call requestPermission to trigger geolocation
+    await expect(result.current.requestPermission()).rejects.toThrow();
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
@@ -108,6 +121,9 @@ describe('useGPS Hook', () => {
 
     const { result } = renderHook(() => useGPS());
 
+    // Call requestPermission to trigger geolocation
+    await result.current.requestPermission();
+
     await waitFor(() => {
       expect(result.current.accuracy).toBe(5);
     });
@@ -118,6 +134,9 @@ describe('useGPS Hook', () => {
     mockGeolocation(coords);
 
     const { result } = renderHook(() => useGPS());
+
+    // Call requestPermission to trigger geolocation
+    await result.current.requestPermission();
 
     await waitFor(() => {
       expect(result.current.accuracy).toBe(100);
@@ -130,6 +149,9 @@ describe('useGPS Hook', () => {
 
     const { result } = renderHook(() => useGPS());
 
+    // Call requestPermission to trigger geolocation
+    await result.current.requestPermission();
+
     await waitFor(() => {
       expect(result.current.latitude).toBe(90);
     });
@@ -140,6 +162,9 @@ describe('useGPS Hook', () => {
     mockGeolocation(coords);
 
     const { result } = renderHook(() => useGPS());
+
+    // Call requestPermission to trigger geolocation
+    await result.current.requestPermission();
 
     await waitFor(() => {
       expect(result.current.latitude).toBe(-90);
@@ -152,6 +177,9 @@ describe('useGPS Hook', () => {
 
     const { result } = renderHook(() => useGPS());
 
+    // Call requestPermission to trigger geolocation
+    await result.current.requestPermission();
+
     await waitFor(() => {
       expect(result.current.longitude).toBe(180);
     });
@@ -162,6 +190,9 @@ describe('useGPS Hook', () => {
     mockGeolocation(coords);
 
     const { result } = renderHook(() => useGPS());
+
+    // Call requestPermission to trigger geolocation
+    await result.current.requestPermission();
 
     await waitFor(() => {
       expect(result.current.latitude).toBeGreaterThanOrEqual(-90);
@@ -174,6 +205,9 @@ describe('useGPS Hook', () => {
     mockGeolocation(coords);
 
     const { result } = renderHook(() => useGPS());
+
+    // Call requestPermission to trigger geolocation
+    await result.current.requestPermission();
 
     await waitFor(() => {
       expect(result.current.longitude).toBeGreaterThanOrEqual(-180);
@@ -192,6 +226,9 @@ describe('useGPS Hook - Browser Compatibility', () => {
     });
 
     const { result } = renderHook(() => useGPS());
+
+    // Call requestPermission to trigger geolocation check
+    await expect(result.current.requestPermission()).rejects.toThrow('Geolocation not supported');
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
