@@ -31,6 +31,11 @@ vi.mock('../StarField', () => ({
   default: () => null,
 }));
 
+// Mock Planets component to avoid complex rendering
+vi.mock('../Planets', () => ({
+  default: () => null,
+}));
+
 describe('CelestialSphere', () => {
   beforeEach(() => {
     vi.clearAllMocks();

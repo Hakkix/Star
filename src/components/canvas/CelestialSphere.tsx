@@ -5,6 +5,7 @@ import { Group } from 'three'
 import { useGPS } from '@/hooks/useGPS'
 import { calculateLST } from '@/lib/astronomy'
 import StarField from './StarField'
+import Planets from './Planets'
 
 /**
  * CelestialSphere Component (HP-7)
@@ -102,8 +103,8 @@ export default function CelestialSphere() {
       {/* StarField: InstancedMesh rendering 5000+ stars */}
       <StarField />
 
-      {/* TODO (HP-8): Add Planets component here */}
-      {/* <Planets /> */}
+      {/* Planets: Individual meshes for Sun, Moon, and major planets */}
+      <Planets />
     </group>
   )
 }

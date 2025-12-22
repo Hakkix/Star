@@ -1,8 +1,8 @@
 # Star AR Project - Comprehensive TODO List
 
-> **Last Updated**: 2025-12-21
-> **Project Status**: Foundation Phase (43% of Phase 1 complete, 13.6% overall)
-> **Current Priority**: Core AR Feature Implementation
+> **Last Updated**: 2025-12-22
+> **Project Status**: Advanced Phase 1 (86% of Phase 1 complete, 27.3% overall)
+> **Current Priority**: HP-8 Planets & HP-10 DetailOverlay (Final MVP Components)
 
 ---
 
@@ -11,9 +11,9 @@
 The Star AR project currently has **excellent infrastructure** (CI/CD, testing framework, documentation) and **all critical blockers resolved**. The landing page is complete, and we now have a working star catalog for MVP development. The actual AR star map 3D functionality needs to be built.
 
 ### Implementation Status
-- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog (MVP)
-- ⚠️ **In Progress**: None
-- ❌ **Not Started**: All AR/3D functionality (hooks, components, rendering)
+- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI
+- ⚠️ **In Progress**: HP-8 (Planets component)
+- ❌ **Not Started**: HP-10 (DetailOverlay), HP-11 (AR page integration), Phase 2 polish, Phase 3 advanced features
 
 ---
 
@@ -171,7 +171,7 @@ Core utilities for celestial calculations and coordinate conversions.
 **Reference**: CLAUDE.md lines 33-59, README.md astronomy section
 **Estimated Effort**: 6-8 hours
 **Dependencies**: astronomy-engine package
-**Status**: Partially complete (raDecToCartesian and calculateLST implemented, getPlanetPosition pending)
+**Status**: ✅ Complete (raDecToCartesian, calculateLST, and getPlanetPosition all implemented and tested)
 
 ---
 
@@ -191,16 +191,17 @@ State management for selected celestial bodies and UI state.
 ```
 
 **Acceptance Criteria**:
-- [ ] Create `src/lib/store.ts`
-- [ ] Define `CelestialBodyData` type
-- [ ] Implement Zustand store with actions
-- [ ] Add DevTools support (development only)
-- [ ] Write unit tests for store actions
-- [ ] Document store usage in code comments
+- [x] Create `src/lib/store.ts`
+- [x] Define `CelestialBodyData` type
+- [x] Implement Zustand store with actions
+- [x] Add DevTools support (development only)
+- [x] Write unit tests for store actions
+- [x] Document store usage in code comments
 
 **Reference**: CLAUDE.md line 88
 **Estimated Effort**: 2-3 hours
 **Dependencies**: zustand package
+**Status**: ✅ Complete (Full store implementation with GPS, orientation, selection, UI state, and settings)
 
 ---
 
@@ -218,15 +219,15 @@ Main R3F Canvas wrapper and orchestration component.
 - Disable SSR (use dynamic import in ar/page.tsx)
 
 **Acceptance Criteria**:
-- [ ] Create `src/components/canvas/Scene.tsx`
-- [ ] Configure R3F Canvas with proper settings
+- [x] Create `src/components/canvas/Scene.tsx`
+- [x] Configure R3F Canvas with proper settings
   - Camera: `fov={75}`, `position={[0, 0, 0.1]}`
   - Background: `#000000` (black)
   - `gl={{ antialias: true, alpha: false }}`
-- [ ] Add ambient lighting
-- [ ] Render CelestialSphere child component
-- [ ] Include CameraController
-- [ ] Add error boundary for WebGL errors
+- [x] Add ambient lighting
+- [x] Render CelestialSphere child component
+- [x] Include CameraController
+- [x] Add error boundary for WebGL errors
 - [ ] Test on desktop (OrbitControls for debugging)
 - [ ] Update `src/app/ar/page.tsx` to use Scene
   - Dynamic import with `ssr: false`
@@ -234,6 +235,7 @@ Main R3F Canvas wrapper and orchestration component.
 **Reference**: CLAUDE.md lines 21-25, README.md Scene section
 **Estimated Effort**: 4-5 hours
 **Dependencies**: HP-5 (CameraController), HP-7 (CelestialSphere)
+**Status**: ✅ Core Complete (Scene setup with WebGL context handling, AR page integration pending)
 
 ---
 
@@ -280,18 +282,18 @@ Renders 5000+ stars using InstancedMesh for performance.
 - Support 5000+ stars at 60 FPS
 
 **Acceptance Criteria**:
-- [ ] Create `src/components/canvas/StarField.tsx`
-- [ ] Load `stars.json` data (use dynamic import or static)
-- [ ] Create InstancedMesh with correct count
+- [x] Create `src/components/canvas/StarField.tsx`
+- [x] Load `stars.json` data (use dynamic import or static)
+- [x] Create InstancedMesh with correct count
   - Geometry: `<sphereGeometry args={[0.15, 8, 8]} />`
   - Material: `<meshBasicMaterial color="white" />`
-- [ ] Loop through stars and set positions
+- [x] Loop through stars and set positions
   - Use `raDecToCartesian()` from astronomy.ts
   - Set matrix via `meshRef.current.setMatrixAt(i, matrix)`
-- [ ] Implement magnitude-based scaling
+- [x] Implement magnitude-based scaling
   - Brighter stars (lower mag) = larger spheres
   - Formula: `scale = 1 / (mag + 1)` or similar
-- [ ] Add click detection
+- [x] Add click detection
   - Use raycasting to detect `instanceId`
   - Update Zustand store with selected star
 - [ ] Optimize for mobile (test on real device)
@@ -300,6 +302,7 @@ Renders 5000+ stars using InstancedMesh for performance.
 **Reference**: CLAUDE.md lines 84-97, README.md StarField section
 **Estimated Effort**: 8-10 hours
 **Dependencies**: HP-2 (astronomy.ts), HP-3 (store), CRIT-3 (star data)
+**Status**: ✅ Complete (InstancedMesh rendering with click detection, mobile optimization pending)
 
 ---
 
@@ -316,20 +319,21 @@ Parent group that applies LST rotation and latitude tilt to align celestial coor
 - Contain StarField and Planets as children
 
 **Acceptance Criteria**:
-- [ ] Create `src/components/canvas/CelestialSphere.tsx`
-- [ ] Import `useGPS` hook
-- [ ] Calculate LST using `calculateLST()` from astronomy.ts
-- [ ] Apply rotation to group
+- [x] Create `src/components/canvas/CelestialSphere.tsx`
+- [x] Import `useGPS` hook
+- [x] Calculate LST using `calculateLST()` from astronomy.ts
+- [x] Apply rotation to group
   - Y-rotation: LST in radians
   - X-tilt: (90° - latitude) in radians
-- [ ] Render children (StarField, Planets)
-- [ ] Memoize calculations (expensive)
+- [x] Render children (StarField, Planets)
+- [x] Memoize calculations (expensive)
 - [ ] Test alignment with known stars (e.g., Polaris)
-- [ ] Document coordinate system transformations
+- [x] Document coordinate system transformations
 
 **Reference**: CLAUDE.md lines 47-52, README.md alignment section
 **Estimated Effort**: 4-5 hours
 **Dependencies**: HP-1.1 (useGPS), HP-2 (astronomy.ts)
+**Status**: ✅ Complete (LST rotation and latitude tilt implemented, real-sky testing pending)
 
 ---
 
@@ -979,19 +983,19 @@ None (no implementation to have bugs yet)
 
 Use this checklist to track overall project completion:
 
-### Phase 1: MVP ☑️ 7/14
+### Phase 1: MVP ☑️ 12/14 (86% Complete)
 - ✅ CRIT-1: Development environment
 - ✅ CRIT-2: Test infrastructure
 - ✅ CRIT-3: Star catalog data
 - ✅ HP-1.1: useGPS hook
 - ✅ HP-1.2: useDeviceOrientation hook
-- ✅ HP-9: Overlay component
+- ✅ HP-2: astronomy.ts library
+- ✅ HP-3: Zustand store
+- ✅ HP-4: Scene component
 - ✅ HP-5: CameraController
-- ⬜ HP-2: astronomy.ts library
-- ⬜ HP-3: Zustand store
-- ⬜ HP-4: Scene component
-- ⬜ HP-6: StarField
-- ⬜ HP-7: CelestialSphere
+- ✅ HP-6: StarField
+- ✅ HP-7: CelestialSphere
+- ✅ HP-9: Overlay component
 - ⬜ HP-8: Planets
 - ⬜ HP-10: DetailOverlay
 
@@ -1023,11 +1027,11 @@ Use this checklist to track overall project completion:
 ---
 
 **Total Tasks**: 44
-**Completed**: 7
-**In Progress**: 0
-**Not Started**: 37
+**Completed**: 12
+**In Progress**: 1 (HP-8)
+**Not Started**: 31
 
-**Overall Completion**: 15.9%
+**Overall Completion**: 27.3%
 
 ---
 
