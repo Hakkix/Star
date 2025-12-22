@@ -19,7 +19,7 @@ vi.mock('@/lib/astronomy', async () => {
   const actual = await vi.importActual('@/lib/astronomy');
   return {
     ...actual,
-    calculateLST: vi.fn((date: Date, longitude: number) => {
+    calculateLST: vi.fn(() => {
       // Default mock implementation returns a simple value
       return 0;
     }),
@@ -122,7 +122,6 @@ describe('CelestialSphere', () => {
     });
 
     it('should handle LST degree to radian conversion correctly', () => {
-      const mockLSTDegrees = 90; // 90 degrees
       const expectedRadians = (90 * Math.PI) / 180; // π/2 radians
 
       vi.mocked(useGPS).mockReturnValue({
