@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useDeviceOrientation } from '@/hooks/useDeviceOrientation'
 import { useGPS } from '@/hooks/useGPS'
 import { OnboardingFlow } from '@/components/dom/OnboardingFlow'
+import { OnboardingTutorial } from '@/components/dom/OnboardingTutorial'
 import { DetailOverlay } from '@/components/dom/DetailOverlay'
 import { useStarStore } from '@/lib/store'
 
@@ -167,6 +168,9 @@ export default function ARExperience() {
           {gpsError?.code === 1 ? 'Location permission denied.' : 'Unable to get your location.'}
         </div>
       )}
+
+      {/* Onboarding Tutorial (shows after permissions granted, first time only) */}
+      {hasCompletedOnboarding && <OnboardingTutorial />}
 
       {/* Detail Overlay for Selected Celestial Bodies */}
       <DetailOverlay />

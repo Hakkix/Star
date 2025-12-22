@@ -1,8 +1,8 @@
 # Star AR Project - Comprehensive TODO List
 
 > **Last Updated**: 2025-12-22
-> **Project Status**: Phase 1 MVP Complete, UX Phase 2 Mostly Complete (22.9% overall)
-> **Current Priority**: UX Phase 3 - AR Experience Enhancements
+> **Project Status**: Phase 1 MVP Complete, UX Phase 2 Mostly Complete, UX Phase 3 Started (24.1% overall)
+> **Current Priority**: UX Phase 3 - AR Experience Enhancements (1/4 complete)
 
 ---
 
@@ -738,19 +738,21 @@ Based on MASTERPAGE_UX_PLAN.md - Comprehensive enhancements to improve user enga
 
 ### UX-3: AR Experience Enhancements (Phase 3)
 
-#### UX-3.1: Onboarding Tutorial
-- [ ] Create `components/dom/OnboardingTutorial.tsx`
-- [ ] First-time user overlay tutorial
-- [ ] "Swipe to dismiss" or "Next" progression
-- [ ] Key steps:
+#### UX-3.1: Onboarding Tutorial ✅
+- [x] Create `components/dom/OnboardingTutorial.tsx`
+- [x] First-time user overlay tutorial
+- [x] "Swipe to dismiss" or "Next" progression
+- [x] Key steps:
   - Point your device at the sky
   - Tap any star to learn more
   - Move your device to explore
-- [ ] "Skip tutorial" option
-- [ ] "Don't show again" checkbox
-- [ ] Use localStorage to track completion
+- [x] "Skip tutorial" option
+- [x] "Don't show again" checkbox
+- [x] Use localStorage to track completion
 
+**Status**: ✅ Complete (2025-12-22)
 **Estimated Effort**: 4-5 hours
+**Actual Implementation**: Full tutorial with 3 steps, navigation controls, localStorage persistence, comprehensive test coverage
 
 ---
 
@@ -1206,15 +1208,16 @@ Based on MASTERPAGE_UX_PLAN.md - phased approach to enhance user experience.
 
 ---
 
-### UX Phase 3: AR Experience (Week 3)
+### UX Phase 3: AR Experience (Week 3) - 25% Complete
 **Priority: MEDIUM**
 **Goal**: Improve in-app experience and onboarding
 
-- [ ] Onboarding tutorial
+- [x] Onboarding tutorial ✅
 - [ ] Enhanced detail overlay
 - [ ] AR controls bar
 - [ ] Help overlay
 
+**Status**: 1/4 complete
 **Deliverable**: Polished AR experience with guided onboarding
 **Estimated Effort**: 2-3 days
 
@@ -1438,14 +1441,18 @@ Use this checklist to track overall project completion:
 - ⬜ LP-5: Search & filter
 - ⬜ LP-6: Screenshot mode
 
-### UI/UX Enhancements ✅ 8/39 (20.5% Complete)
+### UI/UX Enhancements ✅ 9/39 (23.1% Complete)
 - ✅ UX-1: Navigation System (5/5 complete) ✅
 - ⏸️ UX-2: Enhanced Landing Page (3/4 sub-tasks, 75% complete)
   - ✅ UX-2.1: Hero section improvements
   - ⏸️ UX-2.2: Interactive demo (deferred)
   - ✅ UX-2.3: Social proof section
   - ✅ UX-2.4: FAQ section
-- ⬜ UX-3: AR Experience Enhancements (0/4 sub-tasks)
+- ⏳ UX-3: AR Experience Enhancements (1/4 sub-tasks, 25% complete)
+  - ✅ UX-3.1: Onboarding tutorial
+  - ⬜ UX-3.2: In-app help overlay
+  - ⬜ UX-3.3: Enhanced detail overlay
+  - ⬜ UX-3.4: AR UI controls
 - ⬜ UX-4: New Pages (0/3 sub-tasks)
 - ⬜ UX-5: Engagement Features (0/2 sub-tasks)
 - ⬜ UX-6: Accessibility (0/4 sub-tasks)
@@ -1462,11 +1469,11 @@ Use this checklist to track overall project completion:
 ---
 
 **Total Tasks**: 83
-**Completed**: 19
+**Completed**: 20
 **In Progress**: 0
-**Not Started**: 64
+**Not Started**: 63
 
-**Overall Completion**: 22.9% (Phase 1 MVP: 100%, UX: 20.5%, Other: 0%)
+**Overall Completion**: 24.1% (Phase 1 MVP: 100%, UX: 23.1%, Other: 0%)
 
 ---
 
