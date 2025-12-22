@@ -91,7 +91,7 @@ export function Overlay({
     return (
       <div role="alert" aria-live="assertive" style={errorStyle}>
         <h2 style={headingStyle}>Permission Error</h2>
-        <p style={textStyle}>{errorMessage}</p>
+        <p style={textStyle}>Error: {errorMessage}</p>
         <p style={{ ...textStyle, marginBottom: 0, fontSize: '0.875rem' }}>
           Please check your browser settings and try again.
         </p>
@@ -133,9 +133,9 @@ export function Overlay({
         }}>
           ✨
         </div>
-        <h2 style={headingStyle}>Welcome to Star AR</h2>
+        <h2 style={headingStyle}>Star AR Requires Permissions</h2>
         <p style={textStyle}>
-          To view the interactive star map, we need access to your device orientation and location.
+          To view the star map, we need access to your device orientation and location.
           Point your device at the sky to see stars and planets in real-time!
         </p>
         <button
@@ -154,7 +154,7 @@ export function Overlay({
             e.currentTarget.style.transform = 'scale(1)';
           }}
         >
-          Enable Sensors
+          Enable Device Orientation
         </button>
         <p style={{
           ...textStyle,
