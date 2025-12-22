@@ -1,8 +1,8 @@
 # Star AR Project - Comprehensive TODO List
 
 > **Last Updated**: 2025-12-22
-> **Project Status**: Advanced Phase 1 (100% of Phase 1 complete, 31.8% overall)
-> **Current Priority**: HP-11 AR Page Integration (Final MVP Integration)
+> **Project Status**: Advanced Phase 1 (100% of Phase 1 complete, 16.4% overall including UX)
+> **Current Priority**: HP-11 AR Page Integration + UX-1 FAQ Section
 
 ---
 
@@ -11,9 +11,9 @@
 The Star AR project currently has **excellent infrastructure** (CI/CD, testing framework, documentation) and **all critical blockers resolved**. The landing page is complete, and we now have a working star catalog for MVP development. The actual AR star map 3D functionality needs to be built.
 
 ### Implementation Status
-- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI, planets component, detail overlay
+- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI, planets component, detail overlay, navigation system (4/5)
 - ⚠️ **In Progress**: None
-- ❌ **Not Started**: HP-11 (AR page integration), Phase 2 polish, Phase 3 advanced features
+- ❌ **Not Started**: HP-11 (AR page integration), UX enhancements (Phases 2-6), Phase 2 polish, Phase 3 advanced features
 
 ---
 
@@ -652,6 +652,322 @@ Currently using test fixture with 20 stars.
 
 ---
 
+## 🟣 UI/UX Enhancements - Masterpage & Experience
+
+Based on MASTERPAGE_UX_PLAN.md - Comprehensive enhancements to improve user engagement, navigation, and accessibility.
+
+### UX-1: Navigation System (Phase 1) ✅ 4/5 Complete
+**Goal**: Provide consistent navigation across all pages
+
+- [x] Navigation component (`components/dom/Navigation.tsx`)
+- [x] Mobile menu (`components/dom/MobileMenu.tsx`)
+- [x] Back button in AR
+- [x] Help button
+- [ ] FAQ section
+
+**Reference**: MASTERPAGE_UX_PLAN.md Phase 1
+**Status**: 80% Complete
+**Estimated Effort**: 2-3 hours remaining
+
+---
+
+### UX-2: Enhanced Landing Page (Phase 2)
+**Goal**: Improve engagement and reduce friction before AR experience
+
+#### UX-2.1: Hero Section Improvements
+- [ ] Add animated text carousel showing different use cases
+  - "Identify constellations in real-time"
+  - "Track planets across the sky"
+  - "Learn about 5000+ stars"
+- [ ] Add statistics counter animation
+- [ ] Consider video/GIF demo preview
+
+**Estimated Effort**: 3-4 hours
+
+---
+
+#### UX-2.2: Interactive Demo Section (NEW)
+- [ ] Create `components/dom/InteractiveDemo.tsx`
+- [ ] Mini embedded 3D preview (smaller scale)
+- [ ] Click-drag to rotate view
+- [ ] Pre-selected location (no GPS needed)
+- [ ] "Try it yourself" tooltip
+- [ ] Transitions to full AR experience
+
+**Benefits**: Reduces friction, demonstrates value proposition
+**Estimated Effort**: 6-8 hours
+
+---
+
+#### UX-2.3: Social Proof Section (NEW)
+- [ ] Create `components/dom/SocialProof.tsx`
+- [ ] User testimonials (if available)
+- [ ] Star rating display
+- [ ] GitHub stars counter
+- [ ] Active users count (if tracking implemented)
+
+**Estimated Effort**: 2-3 hours
+
+---
+
+#### UX-2.4: FAQ Section (NEW)
+- [ ] Create `components/dom/FAQ.tsx`
+- [ ] Accordion-style with expand/collapse animations
+- [ ] Common questions:
+  - What devices are supported?
+  - Does this work during daytime?
+  - How accurate is the star positioning?
+  - Why do I need to grant permissions?
+  - Is my location data stored?
+  - Can I use this without internet?
+
+**Estimated Effort**: 3-4 hours
+
+---
+
+### UX-3: AR Experience Enhancements (Phase 3)
+
+#### UX-3.1: Onboarding Tutorial
+- [ ] Create `components/dom/OnboardingTutorial.tsx`
+- [ ] First-time user overlay tutorial
+- [ ] "Swipe to dismiss" or "Next" progression
+- [ ] Key steps:
+  - Point your device at the sky
+  - Tap any star to learn more
+  - Move your device to explore
+- [ ] "Skip tutorial" option
+- [ ] "Don't show again" checkbox
+- [ ] Use localStorage to track completion
+
+**Estimated Effort**: 4-5 hours
+
+---
+
+#### UX-3.2: In-App Help Overlay
+- [ ] Create `components/dom/HelpButton.tsx`
+- [ ] Create `components/dom/HelpOverlay.tsx`
+- [ ] Floating "?" button in bottom-right
+- [ ] Help overlay content:
+  - Quick tips
+  - Keyboard shortcuts
+  - Troubleshooting
+  - Link to full documentation
+- [ ] Dismissible without blocking AR view
+
+**Estimated Effort**: 3-4 hours
+
+---
+
+#### UX-3.3: Enhanced Detail Overlay
+Current DetailOverlay is basic. Enhance with:
+- [ ] Add image/illustration of celestial body
+- [ ] Wikipedia excerpt or description
+- [ ] "Learn more" external link
+- [ ] Share button (copy coordinates/name)
+- [ ] Favorite/bookmark button (localStorage)
+- [ ] Navigation arrows (next/previous star)
+
+**Estimated Effort**: 4-5 hours
+
+---
+
+#### UX-3.4: AR UI Controls (NEW)
+- [ ] Create `components/dom/ARControls.tsx`
+- [ ] Bottom control bar with:
+  - Time slider (travel forward/backward in time)
+  - Constellation lines toggle
+  - Star labels toggle
+  - Night mode filter toggle
+  - Screenshot button
+  - Settings gear icon
+- [ ] Semi-transparent floating bar (glass morphism)
+- [ ] 60px height, rounded corners, centered at bottom
+
+**Estimated Effort**: 6-8 hours
+
+---
+
+### UX-4: New Pages (Phase 4)
+
+#### UX-4.1: About Page (`/about`)
+- [ ] Create `app/about/page.tsx`
+- [ ] Content:
+  - Project mission and vision
+  - Technology stack details
+  - Data sources (Hipparcos catalog, astronomy-engine)
+  - Team/contributors
+  - Open source information
+  - Privacy policy summary
+
+**Estimated Effort**: 2-3 hours
+
+---
+
+#### UX-4.2: Help/Documentation Page (`/help`)
+- [ ] Create `app/help/page.tsx`
+- [ ] Sections:
+  - Getting started guide
+  - Troubleshooting common issues
+  - Device compatibility matrix
+  - Keyboard shortcuts reference
+  - Tips for best experience
+  - Contact/feedback form
+
+**Estimated Effort**: 3-4 hours
+
+---
+
+#### UX-4.3: Settings Page (`/settings`)
+- [ ] Create `app/settings/page.tsx` or modal
+- [ ] Options:
+  - Theme: Auto / Light / Dark
+  - Reduce motion toggle
+  - Star count slider (performance)
+  - Label size adjustment
+  - Language selection (future)
+  - Reset tutorial
+  - Clear cached data
+
+**Estimated Effort**: 4-5 hours
+
+---
+
+### UX-5: Engagement Features (Phase 5)
+
+#### UX-5.1: Favorites/Bookmarks
+- [ ] localStorage for favorites
+- [ ] Save favorite celestial bodies
+- [ ] View saved list in sidebar
+- [ ] Quick navigation to favorites
+- [ ] Export/import favorites
+
+**Estimated Effort**: 4-5 hours
+
+---
+
+#### UX-5.2: Screenshots/Sharing
+- [ ] Create `components/dom/ShareButton.tsx`
+- [ ] Capture current AR view
+- [ ] Download as image
+- [ ] Share to social media (Web Share API)
+- [ ] Copy celestial body link
+
+**Estimated Effort**: 3-4 hours
+
+---
+
+### UX-6: Accessibility (Phase 6 - Ongoing)
+
+#### UX-6.1: Keyboard Navigation
+- [ ] Tab order optimization
+- [ ] Visible focus indicators
+- [ ] Skip to main content link
+- [ ] Escape key to close modals
+- [ ] Arrow keys for navigation
+
+**Estimated Effort**: 2-3 hours
+
+---
+
+#### UX-6.2: Screen Reader Support
+- [ ] Proper ARIA labels on all interactive elements
+- [ ] Landmark regions (header, nav, main, footer)
+- [ ] Live regions for dynamic content
+- [ ] Alt text for all visual elements
+
+**Estimated Effort**: 3-4 hours
+
+---
+
+#### UX-6.3: Motion & Animations
+- [ ] Respect `prefers-reduced-motion` media query
+- [ ] Option to disable starfield animation
+- [ ] Simplified transitions when motion reduced
+
+**Estimated Effort**: 2-3 hours
+
+---
+
+#### UX-6.4: Color Contrast
+- [ ] Ensure WCAG AA compliance (4.5:1 for text)
+- [ ] High contrast mode option
+- [ ] Color blind friendly palette option
+
+**Estimated Effort**: 2-3 hours
+
+---
+
+### UX-7: Design System Expansion
+
+#### UX-7.1: Design Tokens
+- [ ] Create `src/lib/constants.ts`
+- [ ] Define design tokens:
+  - Colors (primary, background, text, accent)
+  - Spacing (xs, sm, md, lg, xl, xxl)
+  - Border radius (sm, md, lg, full)
+  - Z-index system
+  - Breakpoints (mobile, tablet, desktop, wide)
+
+**Estimated Effort**: 2-3 hours
+
+---
+
+#### UX-7.2: Animation Library
+- [ ] Create `src/lib/animations.ts`
+- [ ] Standardized animation utilities:
+  - Fade in/out
+  - Slide up/down/left/right
+  - Scale
+  - Rotate
+  - Bounce
+  - Shimmer/loading
+
+**Estimated Effort**: 3-4 hours
+
+---
+
+### UX-8: Enhanced State Management
+Expand Zustand store for UX features:
+- [ ] Add favorites management
+- [ ] Add settings state
+- [ ] Add UI state (menu open, tutorial complete, help open)
+- [ ] Update `src/lib/store.ts` with new interfaces
+
+**Reference**: MASTERPAGE_UX_PLAN.md lines 560-596
+**Estimated Effort**: 2-3 hours
+
+---
+
+### UX-9: Loading & Performance
+
+#### UX-9.1: Loading Progress Component
+- [ ] Create `components/dom/LoadingProgress.tsx`
+- [ ] Progress bar for asset loading
+- [ ] Percentage indicator
+- [ ] Loading stage descriptions:
+  - "Loading star catalog..."
+  - "Calculating planetary positions..."
+  - "Initializing 3D scene..."
+- [ ] Skeleton screens for content
+
+**Estimated Effort**: 3-4 hours
+
+---
+
+#### UX-9.2: Performance Stats (Dev Mode)
+- [ ] Create `components/dom/PerformanceStats.tsx`
+- [ ] Display metrics:
+  - FPS counter
+  - GPU usage
+  - Star count
+  - Draw calls
+  - Memory usage
+- [ ] Only visible in development mode
+
+**Estimated Effort**: 2-3 hours
+
+---
+
 ## 🔵 Low Priority - Future Features
 
 Features mentioned in CLAUDE.md as "future enhancements."
@@ -843,6 +1159,93 @@ Features mentioned in CLAUDE.md as "future enhancements."
 
 ---
 
+## 📱 UI/UX Implementation Roadmap
+
+Based on MASTERPAGE_UX_PLAN.md - phased approach to enhance user experience.
+
+### UX Phase 1: Critical Navigation (Week 1) - ✅ 80% Complete
+**Priority: HIGH**
+**Goal**: Provide consistent navigation across all pages
+
+- [x] Navigation component
+- [x] Mobile menu
+- [x] Back button in AR
+- [x] Help button
+- [ ] FAQ section
+
+**Status**: 4/5 complete, only FAQ remaining
+**Deliverable**: Users can navigate between pages and access help
+
+---
+
+### UX Phase 2: Enhanced Landing (Week 2)
+**Priority: HIGH**
+**Goal**: Improve engagement before AR experience
+
+- [ ] Interactive demo component
+- [ ] Social proof section
+- [ ] Enhanced hero section
+- [ ] FAQ section (from Phase 1)
+
+**Deliverable**: Landing page with interactive preview and social validation
+**Estimated Effort**: 2-3 days
+
+---
+
+### UX Phase 3: AR Experience (Week 3)
+**Priority: MEDIUM**
+**Goal**: Improve in-app experience and onboarding
+
+- [ ] Onboarding tutorial
+- [ ] Enhanced detail overlay
+- [ ] AR controls bar
+- [ ] Help overlay
+
+**Deliverable**: Polished AR experience with guided onboarding
+**Estimated Effort**: 2-3 days
+
+---
+
+### UX Phase 4: New Pages (Week 4)
+**Priority: MEDIUM**
+**Goal**: Complete information architecture
+
+- [ ] About page
+- [ ] Help/documentation page
+- [ ] Settings page/modal
+
+**Deliverable**: Complete site structure with all essential pages
+**Estimated Effort**: 2 days
+
+---
+
+### UX Phase 5: Engagement (Week 5)
+**Priority: LOW**
+**Goal**: Add features that increase user retention
+
+- [ ] Favorites/bookmarks
+- [ ] Screenshot/share
+- [ ] Performance stats (dev mode)
+
+**Deliverable**: Users can save favorites and share discoveries
+**Estimated Effort**: 2 days
+
+---
+
+### UX Phase 6: Accessibility (Ongoing)
+**Priority: HIGH**
+**Goal**: WCAG 2.1 Level AA compliance
+
+- [ ] Keyboard navigation
+- [ ] Screen reader support
+- [ ] Reduced motion support
+- [ ] Color contrast audit
+
+**Deliverable**: Fully accessible application
+**Estimated Effort**: 1-2 days
+
+---
+
 ## 🎯 Current Sprint Recommendations
 
 ### Sprint 1: Foundation (Week 1)
@@ -1020,6 +1423,17 @@ Use this checklist to track overall project completion:
 - ⬜ LP-5: Search & filter
 - ⬜ LP-6: Screenshot mode
 
+### UI/UX Enhancements ⬜ 4/39 (10.3% Complete)
+- ⬜ UX-1: Navigation System (4/5 complete)
+- ⬜ UX-2: Enhanced Landing Page (0/4 sub-tasks)
+- ⬜ UX-3: AR Experience Enhancements (0/4 sub-tasks)
+- ⬜ UX-4: New Pages (0/3 sub-tasks)
+- ⬜ UX-5: Engagement Features (0/2 sub-tasks)
+- ⬜ UX-6: Accessibility (0/4 sub-tasks)
+- ⬜ UX-7: Design System Expansion (0/2 sub-tasks)
+- ⬜ UX-8: Enhanced State Management (0/1 sub-task)
+- ⬜ UX-9: Loading & Performance (0/2 sub-tasks)
+
 ### Infrastructure ⬜ 0/4
 - ⬜ INF-1: Monitoring & analytics
 - ⬜ INF-2: Content Security Policy
@@ -1028,12 +1442,12 @@ Use this checklist to track overall project completion:
 
 ---
 
-**Total Tasks**: 44
+**Total Tasks**: 83
 **Completed**: 14
 **In Progress**: 0
-**Not Started**: 30
+**Not Started**: 69
 
-**Overall Completion**: 31.8%
+**Overall Completion**: 16.4% (Phase 1 MVP: 100%, UX: 10.3%, Other: 0%)
 
 ---
 
