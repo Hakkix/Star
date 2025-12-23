@@ -92,6 +92,7 @@ describe('PerformanceStats', () => {
     mockUsePerformance.mockReturnValueOnce({
       metrics: {
         fps: 60,
+        memory: null as any,
         drawCalls: 42,
         triangles: 15000,
         geometries: 10,
