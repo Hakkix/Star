@@ -8,16 +8,21 @@ import { useGPS } from '@/hooks/useGPS'
 import { OnboardingFlow } from '@/components/dom/OnboardingFlow'
 import { OnboardingTutorial } from '@/components/dom/OnboardingTutorial'
 import { DetailOverlay } from '@/components/dom/DetailOverlay'
+import { HelpButton } from '@/components/dom/HelpButton'
+import { ARControls } from '@/components/dom/ARControls'
 import { useStarStore } from '@/lib/store'
 
 /**
- * AR Experience Page (HP-11)
+ * AR Experience Page (HP-11 + UX-3)
  *
  * Main AR page that integrates all components for the interactive star map experience.
  * This page combines:
  * - 3D Scene with stars, planets, and camera controller
  * - Permission UI for GPS and device orientation
  * - Detail overlay for selected celestial bodies
+ * - Help button and overlay (UX-3.2)
+ * - Enhanced detail overlay with favorites and sharing (UX-3.3)
+ * - AR controls bar with settings (UX-3.4)
  *
  * The Scene component is dynamically imported with SSR disabled to prevent
  * server-side rendering issues with Three.js and WebGL.
@@ -172,8 +177,14 @@ export default function ARExperience() {
       {/* Onboarding Tutorial (shows after permissions granted, first time only) */}
       {hasCompletedOnboarding && <OnboardingTutorial />}
 
-      {/* Detail Overlay for Selected Celestial Bodies */}
+      {/* Detail Overlay for Selected Celestial Bodies (Enhanced with UX-3.3) */}
       <DetailOverlay />
+
+      {/* Help Button (UX-3.2) - Shows after onboarding is complete */}
+      {hasCompletedOnboarding && <HelpButton />}
+
+      {/* AR Controls Bar (UX-3.4) - Shows after onboarding is complete */}
+      {hasCompletedOnboarding && <ARControls />}
     </>
   )
 }
