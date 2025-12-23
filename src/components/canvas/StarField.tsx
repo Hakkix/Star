@@ -8,7 +8,7 @@ import { useRef, useMemo, useEffect } from 'react';
 import { useFrame, ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { raDecToCartesian } from '@/lib/astronomy';
-import { useStarStore, CelestialBodyData } from '@/lib/store';
+import { useStarStore, type StarStoreState, CelestialBodyData } from '@/lib/store';
 import starsData from '@/data/stars.json';
 
 // Constants
@@ -53,7 +53,7 @@ function magnitudeToScale(magnitude: number): number {
 
 export default function StarField() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const selectCelestialBody = useStarStore((state) => state.selectCelestialBody);
+  const selectCelestialBody = useStarStore((state: StarStoreState) => state.selectCelestialBody);
 
   // Load and process star data
   const stars = useMemo(() => {

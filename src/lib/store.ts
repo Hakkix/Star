@@ -46,7 +46,7 @@ export type OnboardingStep = 'welcome' | 'location' | 'orientation' | 'ready' | 
 /**
  * Store state interface
  */
-interface StarStoreState {
+export interface StarStoreState {
   // GPS & Location
   gps: GPSData | null;
   gpsPermission: PermissionState;
@@ -176,7 +176,7 @@ const isSameBody = (a: CelestialBodyData, b: CelestialBodyData): boolean => {
  */
 export const useStarStore = create<StarStoreState>()(
   devtools(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
 
       // GPS Actions
@@ -276,7 +276,7 @@ export const useStarStore = create<StarStoreState>()(
         ),
 
       isFavorite: (body) => {
-        const state = useStarStore.getState();
+        const state = get();
         return state.favorites.some((fav) => isSameBody(fav, body));
       },
 
@@ -301,7 +301,7 @@ export const useStarStore = create<StarStoreState>()(
         ),
 
       exportFavorites: () => {
-        const state = useStarStore.getState();
+        const state = get();
         return JSON.stringify(state.favorites, null, 2);
       },
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { useStarStore, useFavorites } from '@/lib/store'
+import { useStarStore, type StarStoreState, useFavorites } from '@/lib/store'
 import type { CelestialBodyData } from '@/lib/store'
 import styles from './FavoritesPanel.module.css'
 
@@ -36,12 +36,12 @@ interface FavoritesPanelProps {
 
 export function FavoritesPanel({ isOpen, onClose }: FavoritesPanelProps) {
   const favorites = useFavorites()
-  const selectCelestialBody = useStarStore((state) => state.selectCelestialBody)
-  const removeFavorite = useStarStore((state) => state.removeFavorite)
-  const clearFavorites = useStarStore((state) => state.clearFavorites)
-  const exportFavorites = useStarStore((state) => state.exportFavorites)
-  const importFavorites = useStarStore((state) => state.importFavorites)
-  const loadFavorites = useStarStore((state) => state.loadFavorites)
+  const selectCelestialBody = useStarStore((state: StarStoreState) => state.selectCelestialBody)
+  const removeFavorite = useStarStore((state: StarStoreState) => state.removeFavorite)
+  const clearFavorites = useStarStore((state: StarStoreState) => state.clearFavorites)
+  const exportFavorites = useStarStore((state: StarStoreState) => state.exportFavorites)
+  const importFavorites = useStarStore((state: StarStoreState) => state.importFavorites)
+  const loadFavorites = useStarStore((state: StarStoreState) => state.loadFavorites)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Load favorites from localStorage on mount
@@ -240,7 +240,7 @@ export function FavoritesPanel({ isOpen, onClose }: FavoritesPanelProps) {
             </div>
           ) : (
             <div className={styles.list}>
-              {favorites.map((body, index) => (
+              {favorites.map((body: CelestialBodyData, index: number) => (
                 <div
                   key={`${body.type}-${body.name}-${index}`}
                   className={styles.favoriteItem}

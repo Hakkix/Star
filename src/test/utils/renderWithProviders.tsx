@@ -4,7 +4,7 @@
 
 import { render, RenderOptions } from '@testing-library/react';
 import { ReactElement, ReactNode, useEffect } from 'react';
-import { useStarStore } from '@/lib/store';
+import { useStarStore, type StarStoreState } from '@/lib/store';
 
 /**
  * Custom render function that wraps components with necessary providers
@@ -20,7 +20,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
  * This ensures tests don't have state pollution
  */
 function StoreCleanup() {
-  const reset = useStarStore((state) => state.reset);
+  const reset = useStarStore((state: StarStoreState) => state.reset);
 
   useEffect(() => {
     return () => {
