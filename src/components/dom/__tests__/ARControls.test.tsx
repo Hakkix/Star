@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { ARControls } from '../ARControls'
 import { useStarStore } from '@/lib/store'
+import * as screenshotUtils from '@/lib/utils/screenshot'
 
 describe('ARControls', () => {
   beforeEach(() => {
@@ -100,20 +101,37 @@ describe('ARControls', () => {
     expect(useStarStore.getState().showPlanets).toBe(true)
   })
 
-  it('displays screenshot alert', () => {
-    // Create a mock alert function
-    const originalAlert = window.alert
-    window.alert = vi.fn()
+  it('captures and shares screenshot', async () => {
+    // Mock screenshot utilities
+    const captureAndShareMock = vi.spyOn(screenshotUtils, 'captureAndShare')
+    captureAndShareMock.mockResolvedValue(true)
 
     render(<ARControls />)
 
     const screenshotButton = screen.getByLabelText('Take screenshot')
     fireEvent.click(screenshotButton)
 
-    expect(window.alert).toHaveBeenCalledWith('Screenshot feature coming soon!')
+    // Wait for async screenshot capture
+    await waitFor(() => {
+      expect(captureAndShareMock).toHaveBeenCalledWith(
+        'Star AR Screenshot',
+        'Check out this celestial view from Star AR!'
+      )
+    })
 
-    // Restore original alert
-    window.alert = originalAlert
+    // Restore original function
+    captureAndShareMock.mockRestore()
+  })
+
+  it('toggles favorites panel', () => {
+    render(<ARControls />)
+
+    const favoritesButton = screen.getByLabelText('Toggle favorites panel')
+    const initialState = useStarStore.getState().favoritesPanelOpen
+
+    fireEvent.click(favoritesButton)
+
+    expect(useStarStore.getState().favoritesPanelOpen).toBe(!initialState)
   })
 
   it('settings panel shows current state', () => {

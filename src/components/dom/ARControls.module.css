@@ -210,6 +210,38 @@
   border-color: rgba(59, 130, 246, 0.6);
 }
 
+.controlButtonSuccess {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.5);
+  color: rgb(34, 197, 94);
+}
+
+.controlButtonSuccess:hover {
+  background: rgba(34, 197, 94, 0.3);
+  border-color: rgba(34, 197, 94, 0.6);
+}
+
+.controlButtonError {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: rgb(239, 68, 68);
+}
+
+.controlButtonError:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.controlButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.controlButton:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .settingsPanel {

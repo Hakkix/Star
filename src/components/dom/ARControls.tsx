@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import { useStarStore } from '@/lib/store'
+import { captureAndShare, captureAndDownload } from '@/lib/utils/screenshot'
 import styles from './ARControls.module.css'
 
 /**
- * ARControls Component (UX-3.4)
+ * ARControls Component (UX-3.4 + UX-5.2)
  *
  * Bottom control bar for AR view with various controls and toggles.
  * Provides quick access to settings and features without blocking the AR view.
@@ -14,8 +15,9 @@ import styles from './ARControls.module.css'
  * - Time travel controls (future enhancement)
  * - Constellation lines toggle
  * - Planet visibility toggle
+ * - Favorites panel toggle (UX-5.1)
+ * - Screenshot capture and sharing (UX-5.2)
  * - Settings panel toggle
- * - Screenshot capture (future enhancement)
  * - Glass morphism design
  *
  * @example
@@ -25,14 +27,34 @@ import styles from './ARControls.module.css'
  */
 export function ARControls() {
   const [showSettings, setShowSettings] = useState(false)
+  const [screenshotStatus, setScreenshotStatus] = useState<'idle' | 'capturing' | 'success' | 'error'>('idle')
   const showConstellations = useStarStore((state) => state.showConstellations)
   const showPlanets = useStarStore((state) => state.showPlanets)
+  const favoritesPanelOpen = useStarStore((state) => state.favoritesPanelOpen)
   const toggleConstellations = useStarStore((state) => state.toggleConstellations)
   const togglePlanets = useStarStore((state) => state.togglePlanets)
+  const toggleFavoritesPanel = useStarStore((state) => state.toggleFavoritesPanel)
 
-  const handleScreenshot = () => {
-    // Future: Implement screenshot functionality
-    alert('Screenshot feature coming soon!')
+  const handleScreenshot = async () => {
+    setScreenshotStatus('capturing')
+
+    try {
+      // Try to share first (if supported)
+      const shared = await captureAndShare(
+        'Star AR Screenshot',
+        'Check out this celestial view from Star AR!'
+      )
+
+      // If not shared (Web Share API not supported), it falls back to download
+      setScreenshotStatus('success')
+
+      // Reset status after 2 seconds
+      setTimeout(() => setScreenshotStatus('idle'), 2000)
+    } catch (error) {
+      console.error('Screenshot failed:', error)
+      setScreenshotStatus('error')
+      setTimeout(() => setScreenshotStatus('idle'), 2000)
+    }
   }
 
   const handleSettings = () => {
@@ -131,17 +153,63 @@ export function ARControls() {
           </svg>
         </button>
 
+        {/* Favorites */}
+        <button
+          className={`${styles.controlButton} ${favoritesPanelOpen ? styles.controlButtonActive : ''}`}
+          onClick={toggleFavoritesPanel}
+          aria-label="Toggle favorites panel"
+          title="Favorites"
+        >
+          <svg viewBox="0 0 24 24" fill={favoritesPanelOpen ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </button>
+
         {/* Screenshot */}
         <button
-          className={styles.controlButton}
+          className={`${styles.controlButton} ${screenshotStatus === 'success' ? styles.controlButtonSuccess : ''} ${screenshotStatus === 'error' ? styles.controlButtonError : ''}`}
           onClick={handleScreenshot}
+          disabled={screenshotStatus === 'capturing'}
           aria-label="Take screenshot"
-          title="Screenshot (Coming Soon)"
+          title={
+            screenshotStatus === 'capturing'
+              ? 'Capturing...'
+              : screenshotStatus === 'success'
+              ? 'Screenshot saved!'
+              : screenshotStatus === 'error'
+              ? 'Screenshot failed'
+              : 'Take Screenshot'
+          }
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-            <circle cx="12" cy="13" r="4" />
-          </svg>
+          {screenshotStatus === 'capturing' ? (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" strokeDasharray="60" strokeDashoffset="15">
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 12 12"
+                  to="360 12 12"
+                  dur="1s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+            </svg>
+          ) : screenshotStatus === 'success' ? (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : screenshotStatus === 'error' ? (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+              <circle cx="12" cy="13" r="4" />
+            </svg>
+          )}
         </button>
 
         {/* Settings */}

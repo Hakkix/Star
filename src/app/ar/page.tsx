@@ -10,10 +10,11 @@ import { OnboardingTutorial } from '@/components/dom/OnboardingTutorial'
 import { DetailOverlay } from '@/components/dom/DetailOverlay'
 import { HelpButton } from '@/components/dom/HelpButton'
 import { ARControls } from '@/components/dom/ARControls'
+import { FavoritesPanel } from '@/components/dom/FavoritesPanel'
 import { useStarStore } from '@/lib/store'
 
 /**
- * AR Experience Page (HP-11 + UX-3)
+ * AR Experience Page (HP-11 + UX-3 + UX-5)
  *
  * Main AR page that integrates all components for the interactive star map experience.
  * This page combines:
@@ -23,6 +24,7 @@ import { useStarStore } from '@/lib/store'
  * - Help button and overlay (UX-3.2)
  * - Enhanced detail overlay with favorites and sharing (UX-3.3)
  * - AR controls bar with settings (UX-3.4)
+ * - Favorites panel for saved celestial bodies (UX-5.1)
  *
  * The Scene component is dynamically imported with SSR disabled to prevent
  * server-side rendering issues with Three.js and WebGL.
@@ -49,7 +51,7 @@ const Scene = dynamic(() => import('@/components/canvas/Scene'), {
 
 export default function ARExperience() {
   // Store hooks
-  const { hasCompletedOnboarding } = useStarStore();
+  const { hasCompletedOnboarding, favoritesPanelOpen, setFavoritesPanelOpen } = useStarStore();
 
   // Device orientation hook for camera control
   const {
@@ -185,6 +187,14 @@ export default function ARExperience() {
 
       {/* AR Controls Bar (UX-3.4) - Shows after onboarding is complete */}
       {hasCompletedOnboarding && <ARControls />}
+
+      {/* Favorites Panel (UX-5.1) - Shows when toggled from ARControls */}
+      {hasCompletedOnboarding && (
+        <FavoritesPanel
+          isOpen={favoritesPanelOpen}
+          onClose={() => setFavoritesPanelOpen(false)}
+        />
+      )}
     </>
   )
 }
