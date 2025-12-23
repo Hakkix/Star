@@ -25,32 +25,31 @@ vi.mock('@/hooks/usePerformance', () => ({
 }))
 
 describe('PerformanceStats', () => {
-  const originalEnv = process.env.NODE_ENV
-
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.unstubAllEnvs()
   })
 
   afterEach(() => {
-    process.env.NODE_ENV = originalEnv
+    vi.unstubAllEnvs()
   })
 
   it('renders in development mode', () => {
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
     render(<PerformanceStats />)
 
     expect(screen.getByText('Performance Stats')).toBeDefined()
   })
 
   it('does not render in production mode', () => {
-    process.env.NODE_ENV = 'production'
+    vi.stubEnv('NODE_ENV', 'production')
     const { container } = render(<PerformanceStats />)
 
     expect(container.firstChild).toBeNull()
   })
 
   it('displays FPS metric', () => {
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
     render(<PerformanceStats />)
 
     expect(screen.getByText('FPS:')).toBeDefined()
@@ -58,7 +57,7 @@ describe('PerformanceStats', () => {
   })
 
   it('displays memory metrics when available', () => {
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
     render(<PerformanceStats />)
 
     expect(screen.getByText('Memory:')).toBeDefined()
@@ -68,7 +67,7 @@ describe('PerformanceStats', () => {
   })
 
   it('displays render stats', () => {
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
     render(<PerformanceStats />)
 
     expect(screen.getByText('Draw Calls:')).toBeDefined()
@@ -82,18 +81,17 @@ describe('PerformanceStats', () => {
   })
 
   it('displays development mode indicator', () => {
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
     render(<PerformanceStats />)
 
     expect(screen.getByText('Development Mode')).toBeDefined()
   })
 
   it('handles missing memory gracefully', () => {
-    // Override the mock to return null memory
+    // Override the mock to return metrics without memory property
     mockUsePerformance.mockReturnValueOnce({
       metrics: {
         fps: 60,
-        memory: null,
         drawCalls: 42,
         triangles: 15000,
         geometries: 10,
@@ -102,7 +100,7 @@ describe('PerformanceStats', () => {
       updateRendererStats: mockUpdateRendererStats
     })
 
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
     render(<PerformanceStats />)
 
     // Should still render other metrics but not memory
@@ -114,7 +112,7 @@ describe('PerformanceStats', () => {
 
   it('calls onRendererStatsUpdate callback when provided', () => {
     const mockCallback = vi.fn()
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
 
     render(<PerformanceStats onRendererStatsUpdate={mockCallback} />)
 
@@ -122,7 +120,7 @@ describe('PerformanceStats', () => {
   })
 
   it('has proper styling with semi-transparent background', () => {
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
     const { container } = render(<PerformanceStats />)
 
     const statsDiv = container.firstChild as HTMLElement
