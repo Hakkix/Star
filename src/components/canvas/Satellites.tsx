@@ -35,7 +35,7 @@ import { useStarStore, type StarStoreState } from '@/lib/store'
  *     <StarField />
  *     <Planets />
  *   </CelestialSphere>
- *   <Satellites />  {/* Renders separately from celestial sphere */}
+ *   <Satellites />
  * </Canvas>
  * ```
  */

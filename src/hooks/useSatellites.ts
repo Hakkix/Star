@@ -7,7 +7,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   fetchCelesTrakData,
-  parseCelesTrakJSON,
   calculateSatellitePosition,
   calculateSatellitePositions,
   filterByConstellation,
