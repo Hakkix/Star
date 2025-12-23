@@ -92,6 +92,7 @@ describe('PerformanceStats', () => {
     mockUsePerformance.mockReturnValueOnce({
       metrics: {
         fps: 60,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         memory: null as any,
         drawCalls: 42,
         triangles: 15000,
