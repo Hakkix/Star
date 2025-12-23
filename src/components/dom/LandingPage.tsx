@@ -1,10 +1,18 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
-import FAQ from './FAQ'
-import SocialProof from './SocialProof'
 import { ARLaunchLink } from './ARLaunchButton'
 import styles from './LandingPage.module.css'
+
+// Dynamic imports for components below the fold
+const FAQ = dynamic(() => import('./FAQ'), {
+  loading: () => <div style={{ minHeight: '600px' }} />,
+})
+
+const SocialProof = dynamic(() => import('./SocialProof'), {
+  loading: () => <div style={{ minHeight: '400px' }} />,
+})
 
 // Animated counter component for statistics
 function AnimatedCounter({ end, duration, suffix = '' }: { end: number; duration: number; suffix?: string }) {
