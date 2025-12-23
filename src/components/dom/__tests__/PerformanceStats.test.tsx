@@ -1,22 +1,25 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { PerformanceStats } from '../PerformanceStats'
+import type { PerformanceMetrics } from '@/hooks/usePerformance'
 
 // Mock the usePerformance hook at the top level
 const mockUpdateRendererStats = vi.fn()
-const mockUsePerformance = vi.fn(() => ({
-  metrics: {
-    fps: 60,
-    memory: {
-      usedJSHeapSize: 50 * 1024 * 1024, // 50 MB
-      totalJSHeapSize: 100 * 1024 * 1024, // 100 MB
-      jsHeapSizeLimit: 2048 * 1024 * 1024 // 2048 MB
-    },
-    drawCalls: 42,
-    triangles: 15000,
-    geometries: 10,
-    textures: 5
+const defaultMetrics: PerformanceMetrics = {
+  fps: 60,
+  memory: {
+    usedJSHeapSize: 50 * 1024 * 1024, // 50 MB
+    totalJSHeapSize: 100 * 1024 * 1024, // 100 MB
+    jsHeapSizeLimit: 2048 * 1024 * 1024 // 2048 MB
   },
+  drawCalls: 42,
+  triangles: 15000,
+  geometries: 10,
+  textures: 5
+}
+
+const mockUsePerformance = vi.fn(() => ({
+  metrics: defaultMetrics,
   updateRendererStats: mockUpdateRendererStats
 }))
 
@@ -88,16 +91,17 @@ describe('PerformanceStats', () => {
   })
 
   it('handles missing memory gracefully', () => {
-    // Override the mock to return metrics without memory property
+    // Override the mock to return metrics without memory
+    const metricsWithoutMemory: PerformanceMetrics = {
+      fps: 60,
+      memory: null,
+      drawCalls: 42,
+      triangles: 15000,
+      geometries: 10,
+      textures: 5
+    }
     mockUsePerformance.mockReturnValueOnce({
-      metrics: {
-        fps: 60,
-        memory: null as any,
-        drawCalls: 42,
-        triangles: 15000,
-        geometries: 10,
-        textures: 5
-      },
+      metrics: metricsWithoutMemory,
       updateRendererStats: mockUpdateRendererStats
     })
 

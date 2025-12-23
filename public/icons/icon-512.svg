@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <style>
+      .star-bg { fill: #000000; }
+      .star-point { fill: #ffffff; }
+      .star-glow { fill: #4CAF50; opacity: 0.3; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect class="star-bg" width="512" height="512"/>
+
+  <!-- Central star with glow -->
+  <circle class="star-glow" cx="256" cy="256" r="180"/>
+  <polygon class="star-point" points="256,50 280,140 375,140 310,200 335,290 256,230 177,290 202,200 137,140 232,140"/>
+
+  <!-- Surrounding stars for constellation effect -->
+  <circle class="star-point" cx="80" cy="100" r="6"/>
+  <circle class="star-point" cx="430" cy="120" r="5"/>
+  <circle class="star-point" cx="450" cy="360" r="4"/>
+  <circle class="star-point" cx="70" cy="400" r="5"/>
+  <circle class="star-point" cx="240" cy="60" r="4"/>
+  <circle class="star-point" cx="420" cy="220" r="3"/>
+  <circle class="star-point" cx="320" cy="450" r="4"/>
+  <circle class="star-point" cx="160" cy="480" r="3"/>
+
+  <!-- Connecting lines (faint constellation) -->
+  <line x1="80" y1="100" x2="240" y2="60" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+  <line x1="240" y1="60" x2="430" y2="120" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+  <line x1="430" y1="120" x2="450" y2="360" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+</svg>

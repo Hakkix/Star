@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <style>
+      .star-point { fill: #ffffff; }
+      .star-glow { fill: #4CAF50; opacity: 0.4; }
+    </style>
+  </defs>
+
+  <!-- Central star with glow (maskable safe zone) -->
+  <circle class="star-glow" cx="256" cy="256" r="190"/>
+  <polygon class="star-point" points="256,70 280,160 375,160 310,210 335,300 256,250 177,300 202,210 137,160 232,160"/>
+
+  <!-- Surrounding context stars -->
+  <circle class="star-point" cx="90" cy="110" r="7"/>
+  <circle class="star-point" cx="420" cy="130" r="6"/>
+</svg>
