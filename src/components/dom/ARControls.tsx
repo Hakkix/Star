@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useStarStore } from '@/lib/store'
-import { captureAndShare, captureAndDownload } from '@/lib/utils/screenshot'
+import { captureAndShare } from '@/lib/utils/screenshot'
 import styles from './ARControls.module.css'
 
 /**
@@ -39,13 +39,12 @@ export function ARControls() {
     setScreenshotStatus('capturing')
 
     try {
-      // Try to share first (if supported)
-      const shared = await captureAndShare(
+      // Try to share first (if supported), falls back to download automatically
+      await captureAndShare(
         'Star AR Screenshot',
         'Check out this celestial view from Star AR!'
       )
 
-      // If not shared (Web Share API not supported), it falls back to download
       setScreenshotStatus('success')
 
       // Reset status after 2 seconds
