@@ -1,7 +1,7 @@
 # Star AR Project - Comprehensive TODO List
 
 > **Last Updated**: 2025-12-23
-> **Project Status**: Phase 1 MVP Complete, UX Phases 1-6 Complete, UX Phase 5 Partial (40% overall)
+> **Project Status**: Phase 1 MVP Complete, UX Phases 1-6 Complete (100%), UX Phase 5 Complete (41% overall)
 > **Current Priority**: UX Phase 7 - Design System Expansion OR Phase 2 Polish
 
 ---
@@ -11,9 +11,9 @@
 The Star AR project currently has **excellent infrastructure** (CI/CD, testing framework, documentation) and **all critical blockers resolved**. The landing page is complete, and we now have a working star catalog for MVP development. The actual AR star map 3D functionality needs to be built.
 
 ### Implementation Status
-- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI, planets component, detail overlay, AR page integration (HP-11), UX-1 navigation system (5/5), UX-2 landing page enhancements (3/4 sub-tasks), UX-3 AR experience enhancements (4/4), UX-4 new pages (3/3), UX-5 engagement features (2/3 sub-tasks: favorites/bookmarks, screenshots/sharing), UX-6 accessibility (4/4 sub-tasks: keyboard navigation, screen readers, reduced motion, color contrast)
+- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI, planets component, detail overlay, AR page integration (HP-11), UX-1 navigation system (5/5), UX-2 landing page enhancements (3/4 sub-tasks), UX-3 AR experience enhancements (4/4), UX-4 new pages (3/3), UX-5 engagement features (3/3 sub-tasks: favorites/bookmarks, screenshots/sharing, performance stats), UX-6 accessibility (4/4 sub-tasks: keyboard navigation, screen readers, reduced motion, color contrast)
 - ⚠️ **In Progress**: None
-- ❌ **Not Started**: UX-2.2 interactive demo (deferred), UX-5.3 performance stats, UX Phase 7-9, Phase 2 polish, Phase 3 advanced features
+- ❌ **Not Started**: UX-2.2 interactive demo (deferred), UX Phase 7-9, Phase 2 polish, Phase 3 advanced features
 
 ---
 
@@ -892,6 +892,30 @@ Current DetailOverlay is basic. Enhance with:
 
 ---
 
+#### UX-5.3: Performance Stats (Dev Mode) ✅
+- [x] Create `components/dom/PerformanceStats.tsx`
+- [x] Display FPS counter
+- [x] Display memory usage (JS heap)
+- [x] Display draw calls and triangles
+- [x] Display geometries and textures
+- [x] Only visible in development mode
+- [x] Integrate with Three.js renderer stats
+- [x] Write comprehensive tests
+
+**Status**: ✅ Complete (2025-12-23)
+**Estimated Effort**: 2-3 hours
+**Implementation**:
+- Created `hooks/usePerformance.ts` for FPS and memory tracking
+- Created `hooks/useRendererStats.ts` for Three.js renderer metrics
+- Created `components/dom/PerformanceStats.tsx` with real-time display
+- Created `components/canvas/PerformanceMonitor.tsx` for Canvas integration
+- Integrated into AR page with dev mode check
+- Added 15 comprehensive tests (all passing)
+- Fixed ESLint/TypeScript errors
+- Positioned in top-right corner with glass-morphism design
+
+---
+
 ### UX-6: Accessibility (Phase 6) ✅ 100% Complete
 
 #### UX-6.1: Keyboard Navigation ✅
@@ -1284,18 +1308,18 @@ Based on MASTERPAGE_UX_PLAN.md - phased approach to enhance user experience.
 
 ---
 
-### UX Phase 5: Engagement (Week 5) - ✅ 67% Complete
+### UX Phase 5: Engagement (Week 5) - ✅ 100% Complete
 **Priority: LOW**
 **Goal**: Add features that increase user retention
 
 - [x] Favorites/bookmarks ✅
 - [x] Screenshot/share ✅
-- [ ] Performance stats (dev mode)
+- [x] Performance stats (dev mode) ✅
 
-**Status**: 2/3 complete
-**Deliverable**: Users can save favorites and share discoveries
+**Status**: ✅ 3/3 complete - ALL DONE
+**Deliverable**: Users can save favorites, share discoveries, and monitor performance
 **Estimated Effort**: 2 days
-**Completion Date**: 2025-12-23 (partial)
+**Completion Date**: 2025-12-23
 
 ---
 
@@ -1493,7 +1517,7 @@ Use this checklist to track overall project completion:
 - ⬜ LP-5: Search & filter
 - ⬜ LP-6: Screenshot mode
 
-### UI/UX Enhancements ✅ 22/39 (56.4% Complete)
+### UI/UX Enhancements ✅ 23/39 (59.0% Complete)
 - ✅ UX-1: Navigation System (5/5 complete) ✅
 - ⏸️ UX-2: Enhanced Landing Page (3/4 sub-tasks, 75% complete)
   - ✅ UX-2.1: Hero section improvements
@@ -1509,10 +1533,10 @@ Use this checklist to track overall project completion:
   - ✅ UX-4.1: About page
   - ✅ UX-4.2: Help/documentation page
   - ✅ UX-4.3: Settings page
-- ⏸️ UX-5: Engagement Features (2/3 sub-tasks, 67% complete) ✅
+- ✅ UX-5: Engagement Features (3/3 sub-tasks, 100% complete) ✅
   - ✅ UX-5.1: Favorites/bookmarks
   - ✅ UX-5.2: Screenshots/sharing
-  - ⬜ UX-5.3: Performance stats (dev mode)
+  - ✅ UX-5.3: Performance stats (dev mode)
 - ✅ UX-6: Accessibility (4/4 sub-tasks, 100% complete) ✅
   - ✅ UX-6.1: Keyboard navigation
   - ✅ UX-6.2: Screen reader support
@@ -1531,11 +1555,11 @@ Use this checklist to track overall project completion:
 ---
 
 **Total Tasks**: 83
-**Completed**: 33
+**Completed**: 34
 **In Progress**: 0
-**Not Started**: 50
+**Not Started**: 49
 
-**Overall Completion**: 39.8% (Phase 1 MVP: 100%, UX Phase 1-6: 100% except UX-5.3, Other Phases: 0%)
+**Overall Completion**: 41.0% (Phase 1 MVP: 100%, UX Phase 1-6: 100%, Other Phases: 0%)
 
 ---
 
