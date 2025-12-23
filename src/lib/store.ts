@@ -2,17 +2,23 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 /**
- * Celestial body data structure for stars and planets
+ * Celestial body data structure for stars, planets, and satellites
  */
 export interface CelestialBodyData {
-  type: 'star' | 'planet';
+  type: 'star' | 'planet' | 'satellite';
   name: string;
-  ra: number;        // Right Ascension in hours (0-24)
-  dec: number;       // Declination in degrees (-90 to 90)
+  ra?: number;        // Right Ascension in hours (0-24) - optional for satellites
+  dec?: number;       // Declination in degrees (-90 to 90) - optional for satellites
   mag?: number;      // Apparent magnitude (for stars)
   con?: string;      // 3-letter constellation code (for stars)
-  dist?: number;     // Distance in light-years
+  dist?: number;     // Distance in light-years or km
   hip?: number;      // Hipparcos catalog number (for stars)
+  // Satellite-specific fields
+  noradId?: number;   // NORAD catalog ID (for satellites)
+  altitude?: number;  // Altitude in km (for satellites)
+  velocity?: number;  // Velocity in km/s (for satellites)
+  lat?: number;       // Latitude (for satellites)
+  lon?: number;       // Longitude (for satellites)
 }
 
 /**
@@ -73,6 +79,8 @@ export interface StarStoreState {
   // Settings
   showConstellations: boolean;
   showPlanets: boolean;
+  showSatellites: boolean;
+  satelliteGroup: string; // CelesTrak group (e.g., 'active', 'iridium')
 
   // Actions
   setGPS: (latitude: number, longitude: number, accuracy: number) => void;
@@ -105,6 +113,8 @@ export interface StarStoreState {
 
   toggleConstellations: () => void;
   togglePlanets: () => void;
+  toggleSatellites: () => void;
+  setSatelliteGroup: (group: string) => void;
 
   toggleFavoritesPanel: () => void;
   setFavoritesPanelOpen: (open: boolean) => void;
@@ -130,6 +140,8 @@ const initialState = {
   favoritesPanelOpen: false,
   showConstellations: true,
   showPlanets: true,
+  showSatellites: false,
+  satelliteGroup: 'active' as string,
 };
 
 /**
@@ -350,6 +362,16 @@ export const useStarStore = create<StarStoreState>()(
           'togglePlanets'
         ),
 
+      toggleSatellites: () =>
+        set(
+          (state) => ({ showSatellites: !state.showSatellites }),
+          false,
+          'toggleSatellites'
+        ),
+
+      setSatelliteGroup: (group: string) =>
+        set({ satelliteGroup: group }, false, 'setSatelliteGroup'),
+
       toggleFavoritesPanel: () =>
         set(
           (state) => ({ favoritesPanelOpen: !state.favoritesPanelOpen }),
@@ -393,4 +415,6 @@ export const useUIState = () => useStarStore((state) => ({
 export const useSettings = () => useStarStore((state) => ({
   showConstellations: state.showConstellations,
   showPlanets: state.showPlanets,
+  showSatellites: state.showSatellites,
+  satelliteGroup: state.satelliteGroup,
 }));
