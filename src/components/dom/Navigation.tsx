@@ -63,6 +63,18 @@ export default function Navigation() {
     }
   }, [isMobileMenuOpen])
 
+  // Close mobile menu on ESC key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [isMobileMenuOpen])
+
   const isARPage = pathname === '/ar'
 
   const navLinks = [
@@ -73,6 +85,8 @@ export default function Navigation() {
 
   return (
     <nav
+      role="navigation"
+      aria-label="Main navigation"
       className={`${styles.nav} ${isScrolled ? styles.scrolled : ''} ${
         isVisible ? styles.visible : styles.hidden
       } ${isARPage ? styles.arMode : ''}`}
