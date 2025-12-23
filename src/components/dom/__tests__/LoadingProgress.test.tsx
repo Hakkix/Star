@@ -84,7 +84,7 @@ describe('LoadingSpinner', () => {
 
 describe('useLoadingStages', () => {
   it('starts at first stage', () => {
-    let hookResult: ReturnType<typeof useLoadingStages> | null = null;
+    let hookResult: ReturnType<typeof useLoadingStages>;
 
     function TestComponent() {
       hookResult = useLoadingStages();
@@ -92,12 +92,12 @@ describe('useLoadingStages', () => {
     }
 
     render(<TestComponent />);
-    expect(hookResult?.currentStage.id).toBe('catalog');
-    expect(hookResult?.isLoading).toBe(true);
+    expect(hookResult!.currentStage.id).toBe('catalog');
+    expect(hookResult!.isLoading).toBe(true);
   });
 
   it('progresses through stages', () => {
-    let hookResult: ReturnType<typeof useLoadingStages> | null = null;
+    let hookResult: ReturnType<typeof useLoadingStages>;
 
     function TestComponent() {
       hookResult = useLoadingStages();
@@ -107,14 +107,14 @@ describe('useLoadingStages', () => {
     render(<TestComponent />);
 
     act(() => {
-      hookResult?.nextStage();
+      hookResult!.nextStage();
     });
 
-    expect(hookResult?.currentStage.id).toBe('astronomy');
+    expect(hookResult!.currentStage.id).toBe('astronomy');
   });
 
   it('sets loading to false when complete', () => {
-    let hookResult: ReturnType<typeof useLoadingStages> | null = null;
+    let hookResult: ReturnType<typeof useLoadingStages>;
 
     function TestComponent() {
       hookResult = useLoadingStages();
@@ -125,17 +125,17 @@ describe('useLoadingStages', () => {
 
     // Progress through all stages
     act(() => {
-      hookResult?.nextStage(); // astronomy
-      hookResult?.nextStage(); // scene
-      hookResult?.nextStage(); // complete
-      hookResult?.nextStage(); // should not go further
+      hookResult!.nextStage(); // astronomy
+      hookResult!.nextStage(); // scene
+      hookResult!.nextStage(); // complete
+      hookResult!.nextStage(); // should not go further
     });
 
-    expect(hookResult?.isLoading).toBe(false);
+    expect(hookResult!.isLoading).toBe(false);
   });
 
   it('can set stage directly by id', () => {
-    let hookResult: ReturnType<typeof useLoadingStages> | null = null;
+    let hookResult: ReturnType<typeof useLoadingStages>;
 
     function TestComponent() {
       hookResult = useLoadingStages();
@@ -145,14 +145,14 @@ describe('useLoadingStages', () => {
     render(<TestComponent />);
 
     act(() => {
-      hookResult?.setStage('scene');
+      hookResult!.setStage('scene');
     });
 
-    expect(hookResult?.currentStage.id).toBe('scene');
+    expect(hookResult!.currentStage.id).toBe('scene');
   });
 
   it('can reset to initial state', () => {
-    let hookResult: ReturnType<typeof useLoadingStages> | null = null;
+    let hookResult: ReturnType<typeof useLoadingStages>;
 
     function TestComponent() {
       hookResult = useLoadingStages();
@@ -162,11 +162,11 @@ describe('useLoadingStages', () => {
     render(<TestComponent />);
 
     act(() => {
-      hookResult?.nextStage();
-      hookResult?.reset();
+      hookResult!.nextStage();
+      hookResult!.reset();
     });
 
-    expect(hookResult?.currentStage.id).toBe('catalog');
-    expect(hookResult?.isLoading).toBe(true);
+    expect(hookResult!.currentStage.id).toBe('catalog');
+    expect(hookResult!.isLoading).toBe(true);
   });
 });
