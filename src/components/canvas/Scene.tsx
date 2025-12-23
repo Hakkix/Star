@@ -4,12 +4,18 @@ import { Canvas } from '@react-three/fiber'
 import { useEffect, useState } from 'react'
 import CameraController from './CameraController'
 import CelestialSphere from './CelestialSphere'
+import { PerformanceMonitor } from './PerformanceMonitor'
+import type { RendererStats } from '@/hooks/useRendererStats'
+
+interface SceneProps {
+  onPerformanceUpdate?: (stats: RendererStats) => void
+}
 
 /**
  * Main 3D scene component for the AR star map
  * Sets up React Three Fiber Canvas with proper configuration for AR experience
  */
-export default function Scene() {
+export default function Scene({ onPerformanceUpdate }: SceneProps = {}) {
   const [hasWebGL, setHasWebGL] = useState(true)
   const [contextLost, setContextLost] = useState(false)
 
@@ -135,6 +141,11 @@ export default function Scene() {
 
       {/* Celestial sphere contains stars, planets, and handles alignment */}
       <CelestialSphere />
+
+      {/* Performance monitor (dev mode only) */}
+      {process.env.NODE_ENV === 'development' && onPerformanceUpdate && (
+        <PerformanceMonitor onStatsUpdate={onPerformanceUpdate} />
+      )}
     </Canvas>
   )
 }

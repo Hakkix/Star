@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
+import { Suspense, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { useDeviceOrientation } from '@/hooks/useDeviceOrientation'
 import { useGPS } from '@/hooks/useGPS'
@@ -11,7 +11,9 @@ import { DetailOverlay } from '@/components/dom/DetailOverlay'
 import { HelpButton } from '@/components/dom/HelpButton'
 import { ARControls } from '@/components/dom/ARControls'
 import { FavoritesPanel } from '@/components/dom/FavoritesPanel'
+import { PerformanceStats } from '@/components/dom/PerformanceStats'
 import { useStarStore } from '@/lib/store'
+import type { RendererStats } from '@/hooks/useRendererStats'
 
 /**
  * AR Experience Page (HP-11 + UX-3 + UX-5)
@@ -52,6 +54,15 @@ const Scene = dynamic(() => import('@/components/canvas/Scene'), {
 export default function ARExperience() {
   // Store hooks
   const { hasCompletedOnboarding, favoritesPanelOpen, setFavoritesPanelOpen } = useStarStore();
+
+  // Performance stats callback (dev mode only)
+  const [rendererStatsCallback, setRendererStatsCallback] = useState<((stats: RendererStats) => void) | null>(null)
+
+  const handlePerformanceUpdate = useCallback((stats: RendererStats) => {
+    if (rendererStatsCallback) {
+      rendererStatsCallback(stats)
+    }
+  }, [rendererStatsCallback])
 
   // Device orientation hook for camera control
   const {
@@ -137,7 +148,7 @@ export default function ARExperience() {
           Initializing AR Experience...
         </div>
       }>
-        <Scene />
+        <Scene onPerformanceUpdate={handlePerformanceUpdate} />
       </Suspense>
 
       {/* Onboarding Flow */}
@@ -195,6 +206,11 @@ export default function ARExperience() {
           onClose={() => setFavoritesPanelOpen(false)}
         />
       )}
+
+      {/* Performance Stats (UX-5.3 / UX-9.2) - Dev mode only */}
+      <PerformanceStats
+        onRendererStatsUpdate={(callback) => setRendererStatsCallback(() => callback)}
+      />
     </>
   )
 }
