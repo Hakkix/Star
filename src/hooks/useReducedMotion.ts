@@ -45,7 +45,6 @@ export function useReducedMotion(): boolean {
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleChange);
     } else {
-      // @ts-ignore - fallback for older browsers
       mediaQuery.addListener(handleChange);
     }
 
@@ -54,7 +53,6 @@ export function useReducedMotion(): boolean {
       if (mediaQuery.removeEventListener) {
         mediaQuery.removeEventListener('change', handleChange);
       } else {
-        // @ts-ignore - fallback for older browsers
         mediaQuery.removeListener(handleChange);
       }
     };
