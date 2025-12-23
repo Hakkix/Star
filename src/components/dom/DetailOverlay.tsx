@@ -66,10 +66,30 @@ export function DetailOverlay() {
   const handleShare = async () => {
     if (!selectedBody) return
 
-    const shareText = `${selectedBody.name} (${selectedBody.type})\nRA: ${selectedBody.ra.toFixed(4)}h, Dec: ${selectedBody.dec.toFixed(4)}°\n${selectedBody.dist ? `Distance: ${selectedBody.type === 'planet' ? selectedBody.dist.toFixed(3) + ' AU' : selectedBody.dist.toFixed(1) + ' ly'}` : ''}`
+    let shareText = `${selectedBody.name} (${selectedBody.type})\n`
+
+    // Add RA/Dec for stars and planets (not satellites)
+    if (selectedBody.ra !== undefined && selectedBody.dec !== undefined) {
+      shareText += `RA: ${selectedBody.ra.toFixed(4)}h, Dec: ${selectedBody.dec.toFixed(4)}°\n`
+    }
+
+    // Add distance info
+    if (selectedBody.dist) {
+      shareText += `Distance: ${selectedBody.type === 'planet' ? selectedBody.dist.toFixed(3) + ' AU' : selectedBody.dist.toFixed(1) + ' ly'}\n`
+    }
+
+    // Add satellite-specific info
+    if (selectedBody.type === 'satellite') {
+      if (selectedBody.altitude !== undefined) {
+        shareText += `Altitude: ${selectedBody.altitude.toFixed(1)} km\n`
+      }
+      if (selectedBody.velocity !== undefined) {
+        shareText += `Velocity: ${selectedBody.velocity.toFixed(2)} km/s\n`
+      }
+    }
 
     try {
-      await navigator.clipboard.writeText(shareText)
+      await navigator.clipboard.writeText(shareText.trim())
       setShareStatus('success')
       setTimeout(() => setShareStatus('idle'), 2000)
     } catch {
@@ -99,6 +119,20 @@ export function DetailOverlay() {
         Neptune: 'The most distant planet from the Sun, Neptune is an ice giant known for its deep blue color and supersonic winds.',
       }
       return descriptions[body.name] || 'A celestial body in our Solar System.'
+    } else if (body.type === 'satellite') {
+      // Satellite description based on altitude
+      if (body.altitude !== undefined) {
+        if (body.altitude < 400) {
+          return 'A low Earth orbit satellite, likely nearing end-of-life or in decay orbit. These satellites experience atmospheric drag and require periodic boosts.'
+        } else if (body.altitude < 2000) {
+          return 'A low Earth orbit (LEO) satellite, orbiting between 160 to 2,000 km above Earth. Common for communications, Earth observation, and space stations.'
+        } else if (body.altitude < 35786) {
+          return 'A medium Earth orbit (MEO) satellite, commonly used for navigation systems like GPS, GLONASS, and Galileo.'
+        } else {
+          return 'A geostationary satellite, orbiting at ~35,786 km altitude. These satellites maintain a fixed position relative to Earth, ideal for communications and weather monitoring.'
+        }
+      }
+      return 'An artificial satellite orbiting Earth, used for communications, navigation, Earth observation, or scientific research.'
     } else {
       // Generic star description
       if (body.mag !== undefined && body.mag < 1) {
@@ -181,7 +215,7 @@ export function DetailOverlay() {
               {selectedBody.name}
             </h2>
             <span className={styles.badge}>
-              {selectedBody.type === 'star' ? '⭐ Star' : '🪐 Planet'}
+              {selectedBody.type === 'star' ? '⭐ Star' : selectedBody.type === 'planet' ? '🪐 Planet' : '🛰️ Satellite'}
             </span>
           </div>
           <button
@@ -299,24 +333,66 @@ export function DetailOverlay() {
             )}
 
             {/* Distance */}
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Distance</span>
-              <span className={styles.infoValue}>
-                {formatDistance(selectedBody.dist, selectedBody.type)}
-              </span>
-            </div>
+            {selectedBody.type !== 'satellite' && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Distance</span>
+                <span className={styles.infoValue}>
+                  {formatDistance(selectedBody.dist, selectedBody.type)}
+                </span>
+              </div>
+            )}
 
-            {/* Right Ascension */}
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Right Ascension</span>
-              <span className={styles.infoValue}>{formatRA(selectedBody.ra)}</span>
-            </div>
+            {/* Right Ascension (Stars and Planets only) */}
+            {selectedBody.ra !== undefined && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Right Ascension</span>
+                <span className={styles.infoValue}>{formatRA(selectedBody.ra)}</span>
+              </div>
+            )}
 
-            {/* Declination */}
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Declination</span>
-              <span className={styles.infoValue}>{formatDec(selectedBody.dec)}</span>
-            </div>
+            {/* Declination (Stars and Planets only) */}
+            {selectedBody.dec !== undefined && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Declination</span>
+                <span className={styles.infoValue}>{formatDec(selectedBody.dec)}</span>
+              </div>
+            )}
+
+            {/* Satellite-specific info */}
+            {selectedBody.type === 'satellite' && selectedBody.noradId !== undefined && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>NORAD ID</span>
+                <span className={styles.infoValue}>{selectedBody.noradId}</span>
+              </div>
+            )}
+
+            {selectedBody.type === 'satellite' && selectedBody.altitude !== undefined && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Altitude</span>
+                <span className={styles.infoValue}>{selectedBody.altitude.toFixed(1)} km</span>
+              </div>
+            )}
+
+            {selectedBody.type === 'satellite' && selectedBody.velocity !== undefined && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Velocity</span>
+                <span className={styles.infoValue}>{selectedBody.velocity.toFixed(2)} km/s</span>
+              </div>
+            )}
+
+            {selectedBody.type === 'satellite' && selectedBody.lat !== undefined && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Latitude</span>
+                <span className={styles.infoValue}>{selectedBody.lat.toFixed(4)}°</span>
+              </div>
+            )}
+
+            {selectedBody.type === 'satellite' && selectedBody.lon !== undefined && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Longitude</span>
+                <span className={styles.infoValue}>{selectedBody.lon.toFixed(4)}°</span>
+              </div>
+            )}
           </div>
         </div>
 

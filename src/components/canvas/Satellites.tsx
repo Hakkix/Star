@@ -3,7 +3,6 @@
 import { useRef, useMemo, useState, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Mesh, Vector3 } from 'three'
-import { useGPS } from '@/hooks/useGPS'
 import { useSatellites } from '@/hooks/useSatellites'
 import { satellitePositionToCartesian } from '@/lib/tle'
 import { useStarStore, type StarStoreState } from '@/lib/store'
@@ -45,12 +44,10 @@ import { useStarStore, type StarStoreState } from '@/lib/store'
  */
 interface SatelliteMeshProps {
   position: Vector3;
-  name: string;
-  noradId: number;
   onClick: () => void;
 }
 
-function SatelliteMesh({ position, name, noradId, onClick }: SatelliteMeshProps) {
+function SatelliteMesh({ position, onClick }: SatelliteMeshProps) {
   const meshRef = useRef<Mesh>(null);
 
   return (
@@ -72,7 +69,6 @@ function SatelliteMesh({ position, name, noradId, onClick }: SatelliteMeshProps)
  * Main Satellites component
  */
 export default function Satellites() {
-  const { latitude, longitude } = useGPS();
   const { showSatellites, satelliteGroup } = useStarStore((state: StarStoreState) => ({
     showSatellites: state.showSatellites,
     satelliteGroup: state.satelliteGroup,
@@ -165,8 +161,6 @@ export default function Satellites() {
           <SatelliteMesh
             key={sat.noradId}
             position={position}
-            name={sat.name}
-            noradId={sat.noradId}
             onClick={() => handleSatelliteClick(sat)}
           />
         );
