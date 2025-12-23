@@ -62,9 +62,13 @@ interface StarStoreState {
   // Selected Celestial Body
   selectedBody: CelestialBodyData | null;
 
+  // Favorites
+  favorites: CelestialBodyData[];
+
   // UI State
   isLoading: boolean;
   errorMessage: string | null;
+  favoritesPanelOpen: boolean;
 
   // Settings
   showConstellations: boolean;
@@ -86,12 +90,24 @@ interface StarStoreState {
   selectCelestialBody: (body: CelestialBodyData) => void;
   clearSelection: () => void;
 
+  addFavorite: (body: CelestialBodyData) => void;
+  removeFavorite: (body: CelestialBodyData) => void;
+  toggleFavorite: (body: CelestialBodyData) => void;
+  isFavorite: (body: CelestialBodyData) => boolean;
+  clearFavorites: () => void;
+  loadFavorites: () => void;
+  exportFavorites: () => string;
+  importFavorites: (data: string) => boolean;
+
   setLoading: (loading: boolean) => void;
   setError: (message: string | null) => void;
   clearError: () => void;
 
   toggleConstellations: () => void;
   togglePlanets: () => void;
+
+  toggleFavoritesPanel: () => void;
+  setFavoritesPanelOpen: (open: boolean) => void;
 
   // Reset entire store
   reset: () => void;
@@ -108,10 +124,44 @@ const initialState = {
   onboardingStep: 'welcome' as OnboardingStep,
   hasCompletedOnboarding: false,
   selectedBody: null,
+  favorites: [] as CelestialBodyData[],
   isLoading: false,
   errorMessage: null,
+  favoritesPanelOpen: false,
   showConstellations: true,
   showPlanets: true,
+};
+
+/**
+ * Helper function to get favorites from localStorage
+ */
+const getFavoritesFromStorage = (): CelestialBodyData[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    const stored = localStorage.getItem('star-favorites');
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
+/**
+ * Helper function to save favorites to localStorage
+ */
+const saveFavoritesToStorage = (favorites: CelestialBodyData[]) => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem('star-favorites', JSON.stringify(favorites));
+  } catch (error) {
+    console.error('Failed to save favorites:', error);
+  }
+};
+
+/**
+ * Helper function to check if two celestial bodies are the same
+ */
+const isSameBody = (a: CelestialBodyData, b: CelestialBodyData): boolean => {
+  return a.name === b.name && a.type === b.type;
 };
 
 /**
@@ -186,6 +236,95 @@ export const useStarStore = create<StarStoreState>()(
       clearSelection: () =>
         set({ selectedBody: null }, false, 'clearSelection'),
 
+      // Favorites Actions
+      addFavorite: (body) =>
+        set(
+          (state) => {
+            const newFavorites = [...state.favorites, body];
+            saveFavoritesToStorage(newFavorites);
+            return { favorites: newFavorites };
+          },
+          false,
+          'addFavorite'
+        ),
+
+      removeFavorite: (body) =>
+        set(
+          (state) => {
+            const newFavorites = state.favorites.filter(
+              (fav) => !isSameBody(fav, body)
+            );
+            saveFavoritesToStorage(newFavorites);
+            return { favorites: newFavorites };
+          },
+          false,
+          'removeFavorite'
+        ),
+
+      toggleFavorite: (body) =>
+        set(
+          (state) => {
+            const isFav = state.favorites.some((fav) => isSameBody(fav, body));
+            const newFavorites = isFav
+              ? state.favorites.filter((fav) => !isSameBody(fav, body))
+              : [...state.favorites, body];
+            saveFavoritesToStorage(newFavorites);
+            return { favorites: newFavorites };
+          },
+          false,
+          'toggleFavorite'
+        ),
+
+      isFavorite: (body) => {
+        const state = useStarStore.getState();
+        return state.favorites.some((fav) => isSameBody(fav, body));
+      },
+
+      clearFavorites: () =>
+        set(
+          () => {
+            saveFavoritesToStorage([]);
+            return { favorites: [] };
+          },
+          false,
+          'clearFavorites'
+        ),
+
+      loadFavorites: () =>
+        set(
+          () => {
+            const favorites = getFavoritesFromStorage();
+            return { favorites };
+          },
+          false,
+          'loadFavorites'
+        ),
+
+      exportFavorites: () => {
+        const state = useStarStore.getState();
+        return JSON.stringify(state.favorites, null, 2);
+      },
+
+      importFavorites: (data) => {
+        try {
+          const imported = JSON.parse(data);
+          if (Array.isArray(imported)) {
+            set(
+              () => {
+                saveFavoritesToStorage(imported);
+                return { favorites: imported };
+              },
+              false,
+              'importFavorites'
+            );
+            return true;
+          }
+          return false;
+        } catch {
+          return false;
+        }
+      },
+
       // UI State Actions
       setLoading: (loading) =>
         set({ isLoading: loading }, false, 'setLoading'),
@@ -211,6 +350,16 @@ export const useStarStore = create<StarStoreState>()(
           'togglePlanets'
         ),
 
+      toggleFavoritesPanel: () =>
+        set(
+          (state) => ({ favoritesPanelOpen: !state.favoritesPanelOpen }),
+          false,
+          'toggleFavoritesPanel'
+        ),
+
+      setFavoritesPanelOpen: (open) =>
+        set({ favoritesPanelOpen: open }, false, 'setFavoritesPanelOpen'),
+
       // Reset Action
       reset: () =>
         set(initialState, false, 'reset'),
@@ -228,6 +377,7 @@ export const useStarStore = create<StarStoreState>()(
 export const useGPS = () => useStarStore((state) => state.gps);
 export const useOrientation = () => useStarStore((state) => state.orientation);
 export const useSelectedBody = () => useStarStore((state) => state.selectedBody);
+export const useFavorites = () => useStarStore((state) => state.favorites);
 export const usePermissions = () => useStarStore((state) => ({
   gps: state.gpsPermission,
   orientation: state.orientationPermission,

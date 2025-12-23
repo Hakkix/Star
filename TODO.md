@@ -1,8 +1,8 @@
 # Star AR Project - Comprehensive TODO List
 
 > **Last Updated**: 2025-12-23
-> **Project Status**: Phase 1 MVP Complete, UX Phases 1-4 Complete (32.5% overall)
-> **Current Priority**: UX Phase 5 - Engagement Features (Favorites/Bookmarks, Screenshots/Sharing)
+> **Project Status**: Phase 1 MVP Complete, UX Phases 1-4 Complete, UX Phase 5 Partial (34.9% overall)
+> **Current Priority**: UX Phase 6 - Accessibility (Keyboard Navigation, Screen Readers, Reduced Motion)
 
 ---
 
@@ -11,9 +11,9 @@
 The Star AR project currently has **excellent infrastructure** (CI/CD, testing framework, documentation) and **all critical blockers resolved**. The landing page is complete, and we now have a working star catalog for MVP development. The actual AR star map 3D functionality needs to be built.
 
 ### Implementation Status
-- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI, planets component, detail overlay, AR page integration (HP-11), UX-1 navigation system (5/5), UX-2 landing page enhancements (3/4 sub-tasks), UX-3 AR experience enhancements (4/4), UX-4 new pages (3/3)
+- ✅ **Completed**: Landing page, test infrastructure, CI/CD, documentation, star catalog, GPS/orientation hooks, astronomy library, Zustand store, 3D scene, camera controller, star field rendering, celestial sphere alignment, overlay UI, planets component, detail overlay, AR page integration (HP-11), UX-1 navigation system (5/5), UX-2 landing page enhancements (3/4 sub-tasks), UX-3 AR experience enhancements (4/4), UX-4 new pages (3/3), UX-5 engagement features (2/3 sub-tasks: favorites/bookmarks, screenshots/sharing)
 - ⚠️ **In Progress**: None
-- ❌ **Not Started**: UX-2.2 interactive demo (deferred), UX Phase 5-9, Phase 2 polish, Phase 3 advanced features
+- ❌ **Not Started**: UX-2.2 interactive demo (deferred), UX-5.3 performance stats, UX Phase 6-9, Phase 2 polish, Phase 3 advanced features
 
 ---
 
@@ -856,25 +856,39 @@ Current DetailOverlay is basic. Enhance with:
 
 ### UX-5: Engagement Features (Phase 5)
 
-#### UX-5.1: Favorites/Bookmarks
-- [ ] localStorage for favorites
-- [ ] Save favorite celestial bodies
-- [ ] View saved list in sidebar
-- [ ] Quick navigation to favorites
-- [ ] Export/import favorites
+#### UX-5.1: Favorites/Bookmarks ✅
+- [x] localStorage for favorites
+- [x] Save favorite celestial bodies
+- [x] View saved list in sidebar (FavoritesPanel)
+- [x] Quick navigation to favorites
+- [x] Export/import favorites
 
+**Status**: ✅ Complete (2025-12-23)
 **Estimated Effort**: 4-5 hours
+**Implementation**:
+- Added favorites state and actions to Zustand store
+- Created FavoritesPanel component with sidebar view
+- Updated DetailOverlay to use centralized store
+- Added favorites button to ARControls
+- Implemented export/import JSON functionality
 
 ---
 
-#### UX-5.2: Screenshots/Sharing
-- [ ] Create `components/dom/ShareButton.tsx`
-- [ ] Capture current AR view
-- [ ] Download as image
-- [ ] Share to social media (Web Share API)
-- [ ] Copy celestial body link
+#### UX-5.2: Screenshots/Sharing ✅
+- [x] Create screenshot utility functions
+- [x] Capture current AR view
+- [x] Download as image
+- [x] Share to social media (Web Share API)
+- [x] Copy celestial body link (already in DetailOverlay)
 
+**Status**: ✅ Complete (2025-12-23)
 **Estimated Effort**: 3-4 hours
+**Implementation**:
+- Created `lib/utils/screenshot.ts` with capture and share utilities
+- Updated ARControls screenshot button with real functionality
+- Implemented canvas capture using toBlob
+- Added Web Share API with fallback to download
+- Screenshot button shows status (capturing/success/error)
 
 ---
 
@@ -1246,16 +1260,18 @@ Based on MASTERPAGE_UX_PLAN.md - phased approach to enhance user experience.
 
 ---
 
-### UX Phase 5: Engagement (Week 5)
+### UX Phase 5: Engagement (Week 5) - ✅ 67% Complete
 **Priority: LOW**
 **Goal**: Add features that increase user retention
 
-- [ ] Favorites/bookmarks
-- [ ] Screenshot/share
+- [x] Favorites/bookmarks ✅
+- [x] Screenshot/share ✅
 - [ ] Performance stats (dev mode)
 
+**Status**: 2/3 complete
 **Deliverable**: Users can save favorites and share discoveries
 **Estimated Effort**: 2 days
+**Completion Date**: 2025-12-23 (partial)
 
 ---
 
@@ -1451,7 +1467,7 @@ Use this checklist to track overall project completion:
 - ⬜ LP-5: Search & filter
 - ⬜ LP-6: Screenshot mode
 
-### UI/UX Enhancements ✅ 16/39 (41.0% Complete)
+### UI/UX Enhancements ✅ 18/39 (46.2% Complete)
 - ✅ UX-1: Navigation System (5/5 complete) ✅
 - ⏸️ UX-2: Enhanced Landing Page (3/4 sub-tasks, 75% complete)
   - ✅ UX-2.1: Hero section improvements
@@ -1467,7 +1483,10 @@ Use this checklist to track overall project completion:
   - ✅ UX-4.1: About page
   - ✅ UX-4.2: Help/documentation page
   - ✅ UX-4.3: Settings page
-- ⬜ UX-5: Engagement Features (0/2 sub-tasks)
+- ⏸️ UX-5: Engagement Features (2/3 sub-tasks, 67% complete) ✅
+  - ✅ UX-5.1: Favorites/bookmarks
+  - ✅ UX-5.2: Screenshots/sharing
+  - ⬜ UX-5.3: Performance stats (dev mode)
 - ⬜ UX-6: Accessibility (0/4 sub-tasks)
 - ⬜ UX-7: Design System Expansion (0/2 sub-tasks)
 - ⬜ UX-8: Enhanced State Management (0/1 sub-task)
@@ -1482,11 +1501,11 @@ Use this checklist to track overall project completion:
 ---
 
 **Total Tasks**: 83
-**Completed**: 27
+**Completed**: 29
 **In Progress**: 0
-**Not Started**: 56
+**Not Started**: 54
 
-**Overall Completion**: 32.5% (Phase 1 MVP: 100%, UX Phase 1-4: 100%, Other Phases: 0%)
+**Overall Completion**: 34.9% (Phase 1 MVP: 100%, UX Phase 1-4: 100%, UX Phase 5: 67%, Other Phases: 0%)
 
 ---
 

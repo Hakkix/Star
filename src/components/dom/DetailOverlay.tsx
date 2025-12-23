@@ -36,8 +36,9 @@ import styles from './DetailOverlay.module.css'
 export function DetailOverlay() {
   const selectedBody = useStarStore((state) => state.selectedBody)
   const clearSelection = useStarStore((state) => state.clearSelection)
+  const toggleFavorite = useStarStore((state) => state.toggleFavorite)
+  const favorites = useStarStore((state) => state.favorites)
   const [isVisible, setIsVisible] = useState(false)
-  const [isFavorite, setIsFavorite] = useState(false)
   const [shareStatus, setShareStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   // Trigger slide-up animation when a body is selected
@@ -45,63 +46,20 @@ export function DetailOverlay() {
     if (selectedBody) {
       // Small delay to ensure smooth animation
       setTimeout(() => setIsVisible(true), 10)
-      // Check if this body is favorited
-      checkIfFavorite(selectedBody)
     } else {
       setIsVisible(false)
     }
   }, [selectedBody])
 
-  // Check if current body is in favorites
-  const checkIfFavorite = (body: CelestialBodyData) => {
-    const favorites = getFavorites()
-    const isFav = favorites.some(
-      (fav) => fav.name === body.name && fav.type === body.type
-    )
-    setIsFavorite(isFav)
-  }
-
-  // Get favorites from localStorage
-  const getFavorites = (): CelestialBodyData[] => {
-    if (typeof window === 'undefined') return []
-    try {
-      const stored = localStorage.getItem('star-favorites')
-      return stored ? JSON.parse(stored) : []
-    } catch {
-      return []
-    }
-  }
-
-  // Save favorites to localStorage
-  const saveFavorites = (favorites: CelestialBodyData[]) => {
-    if (typeof window === 'undefined') return
-    try {
-      localStorage.setItem('star-favorites', JSON.stringify(favorites))
-    } catch (error) {
-      console.error('Failed to save favorites:', error)
-    }
-  }
+  // Check if current body is favorited
+  const isFavorite = selectedBody
+    ? favorites.some((fav) => fav.name === selectedBody.name && fav.type === selectedBody.type)
+    : false
 
   // Toggle favorite status
   const handleToggleFavorite = () => {
     if (!selectedBody) return
-
-    const favorites = getFavorites()
-    const index = favorites.findIndex(
-      (fav) => fav.name === selectedBody.name && fav.type === selectedBody.type
-    )
-
-    if (index >= 0) {
-      // Remove from favorites
-      favorites.splice(index, 1)
-      setIsFavorite(false)
-    } else {
-      // Add to favorites
-      favorites.push(selectedBody)
-      setIsFavorite(true)
-    }
-
-    saveFavorites(favorites)
+    toggleFavorite(selectedBody)
   }
 
   // Handle share (copy to clipboard)
