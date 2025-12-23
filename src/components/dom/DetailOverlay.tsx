@@ -2,20 +2,27 @@
 
 import { useEffect, useState } from 'react'
 import { useStarStore } from '@/lib/store'
+import type { CelestialBodyData } from '@/lib/store'
 import styles from './DetailOverlay.module.css'
 
 /**
- * DetailOverlay Component (HP-10)
+ * DetailOverlay Component (HP-10 + UX-3.3)
  *
- * Displays detailed information about a selected celestial body (star or planet).
+ * Enhanced detail overlay displaying information about selected celestial bodies.
  * Appears as a slide-up card when user taps a star or planet in the AR view.
  *
- * ## Features
+ * ## Features (HP-10)
  * - Subscribe to Zustand store for selected body
  * - Display comprehensive celestial data
  * - Smooth slide-up animation
  * - Dismissible via close button or backdrop click
  * - Matches landing page design theme
+ *
+ * ## Enhanced Features (UX-3.3)
+ * - Description/information about the celestial body
+ * - Share button (copy coordinates/name to clipboard)
+ * - Favorite/bookmark button (localStorage)
+ * - "Learn more" Wikipedia link
  *
  * ## Data Display
  * - **Stars**: Name, HIP number, magnitude, constellation, distance, RA/Dec
@@ -30,16 +37,121 @@ export function DetailOverlay() {
   const selectedBody = useStarStore((state) => state.selectedBody)
   const clearSelection = useStarStore((state) => state.clearSelection)
   const [isVisible, setIsVisible] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [shareStatus, setShareStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   // Trigger slide-up animation when a body is selected
   useEffect(() => {
     if (selectedBody) {
       // Small delay to ensure smooth animation
       setTimeout(() => setIsVisible(true), 10)
+      // Check if this body is favorited
+      checkIfFavorite(selectedBody)
     } else {
       setIsVisible(false)
     }
   }, [selectedBody])
+
+  // Check if current body is in favorites
+  const checkIfFavorite = (body: CelestialBodyData) => {
+    const favorites = getFavorites()
+    const isFav = favorites.some(
+      (fav) => fav.name === body.name && fav.type === body.type
+    )
+    setIsFavorite(isFav)
+  }
+
+  // Get favorites from localStorage
+  const getFavorites = (): CelestialBodyData[] => {
+    if (typeof window === 'undefined') return []
+    try {
+      const stored = localStorage.getItem('star-favorites')
+      return stored ? JSON.parse(stored) : []
+    } catch {
+      return []
+    }
+  }
+
+  // Save favorites to localStorage
+  const saveFavorites = (favorites: CelestialBodyData[]) => {
+    if (typeof window === 'undefined') return
+    try {
+      localStorage.setItem('star-favorites', JSON.stringify(favorites))
+    } catch (error) {
+      console.error('Failed to save favorites:', error)
+    }
+  }
+
+  // Toggle favorite status
+  const handleToggleFavorite = () => {
+    if (!selectedBody) return
+
+    const favorites = getFavorites()
+    const index = favorites.findIndex(
+      (fav) => fav.name === selectedBody.name && fav.type === selectedBody.type
+    )
+
+    if (index >= 0) {
+      // Remove from favorites
+      favorites.splice(index, 1)
+      setIsFavorite(false)
+    } else {
+      // Add to favorites
+      favorites.push(selectedBody)
+      setIsFavorite(true)
+    }
+
+    saveFavorites(favorites)
+  }
+
+  // Handle share (copy to clipboard)
+  const handleShare = async () => {
+    if (!selectedBody) return
+
+    const shareText = `${selectedBody.name} (${selectedBody.type})\nRA: ${selectedBody.ra.toFixed(4)}h, Dec: ${selectedBody.dec.toFixed(4)}°\n${selectedBody.dist ? `Distance: ${selectedBody.type === 'planet' ? selectedBody.dist.toFixed(3) + ' AU' : selectedBody.dist.toFixed(1) + ' ly'}` : ''}`
+
+    try {
+      await navigator.clipboard.writeText(shareText)
+      setShareStatus('success')
+      setTimeout(() => setShareStatus('idle'), 2000)
+    } catch {
+      setShareStatus('error')
+      setTimeout(() => setShareStatus('idle'), 2000)
+    }
+  }
+
+  // Get Wikipedia link
+  const getWikipediaLink = (body: CelestialBodyData): string => {
+    const searchTerm = encodeURIComponent(body.name)
+    return `https://en.wikipedia.org/wiki/${searchTerm}`
+  }
+
+  // Get description
+  const getDescription = (body: CelestialBodyData): string => {
+    if (body.type === 'planet') {
+      const descriptions: Record<string, string> = {
+        Sun: 'The Sun is the star at the center of our Solar System. It is a nearly perfect sphere of hot plasma, providing the energy necessary for life on Earth.',
+        Moon: 'Earth\'s only natural satellite, the Moon is the fifth largest satellite in the Solar System and the largest relative to its host planet.',
+        Mercury: 'The smallest planet in our Solar System and closest to the Sun. Mercury has a very thin atmosphere and experiences extreme temperature variations.',
+        Venus: 'Often called Earth\'s "sister planet" due to similar size and mass. Venus has a thick, toxic atmosphere and is the hottest planet in our Solar System.',
+        Mars: 'Known as the "Red Planet" due to iron oxide on its surface. Mars has the largest volcano and canyon in the Solar System.',
+        Jupiter: 'The largest planet in our Solar System, a gas giant with a mass more than twice that of all other planets combined.',
+        Saturn: 'Famous for its spectacular ring system, Saturn is the second-largest planet and a gas giant with dozens of moons.',
+        Uranus: 'An ice giant with a unique sideways rotation. Uranus appears blue-green due to methane in its atmosphere.',
+        Neptune: 'The most distant planet from the Sun, Neptune is an ice giant known for its deep blue color and supersonic winds.',
+      }
+      return descriptions[body.name] || 'A celestial body in our Solar System.'
+    } else {
+      // Generic star description
+      if (body.mag !== undefined && body.mag < 1) {
+        return 'One of the brightest stars visible in the night sky, easily seen with the naked eye even in light-polluted areas.'
+      } else if (body.mag !== undefined && body.mag < 3) {
+        return 'A prominent star visible to the naked eye on clear nights, part of a well-known constellation pattern.'
+      } else {
+        return 'A distant star in our galaxy, part of the vast cosmic tapestry visible in the night sky.'
+      }
+    }
+  }
 
   // Handle backdrop click to dismiss
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -135,6 +247,74 @@ export function DetailOverlay() {
 
         {/* Body */}
         <div className={styles.body}>
+          {/* Description */}
+          <div className={styles.description}>
+            <p>{getDescription(selectedBody)}</p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className={styles.actions}>
+            <button
+              className={`${styles.actionButton} ${isFavorite ? styles.favoriteActive : ''}`}
+              onClick={handleToggleFavorite}
+              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <svg viewBox="0 0 24 24" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              <span>{isFavorite ? 'Favorited' : 'Favorite'}</span>
+            </button>
+            <button
+              className={styles.actionButton}
+              onClick={handleShare}
+              aria-label="Share coordinates"
+              title="Copy to clipboard"
+            >
+              {shareStatus === 'success' ? (
+                <>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Copied!</span>
+                </>
+              ) : shareStatus === 'error' ? (
+                <>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                    <line x1="9" y1="9" x2="15" y2="15" />
+                  </svg>
+                  <span>Failed</span>
+                </>
+              ) : (
+                <>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                    <polyline points="16 6 12 2 8 6" />
+                    <line x1="12" y1="2" x2="12" y2="15" />
+                  </svg>
+                  <span>Share</span>
+                </>
+              )}
+            </button>
+            <a
+              href={getWikipediaLink(selectedBody)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.actionButton}
+              aria-label="Learn more on Wikipedia"
+              title="Learn more"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <span>Learn More</span>
+            </a>
+          </div>
+
           <div className={styles.infoGrid}>
             {/* Hipparcos Number (Stars only) */}
             {selectedBody.type === 'star' && selectedBody.hip && (
