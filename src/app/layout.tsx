@@ -10,6 +10,15 @@ export const metadata: Metadata = {
   keywords: ['AR', 'astronomy', 'star map', 'augmented reality', 'celestial', 'planets', 'constellations'],
   authors: [{ name: 'Star Team' }],
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icons/icon-192.svg', sizes: '192x192', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/icons/icon-192.svg', sizes: '180x180', type: 'image/svg+xml' },
+    ],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',

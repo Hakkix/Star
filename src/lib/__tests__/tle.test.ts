@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   parseTLE,
   parseCelesTrakJSON,
@@ -282,7 +282,6 @@ describe('TLE Parser', () => {
       const position = calculateSatellitePosition(parsed);
 
       const cartesian1 = satellitePositionToCartesian(position);
-      const cartesian2 = satellitePositionToCartesian(position, 10);
 
       // Should use default scale of 10
       expect(typeof cartesian1.x).toBe('number');

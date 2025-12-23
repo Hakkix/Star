@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .star-bg { fill: #000000; }
+      .star-point { fill: #ffffff; }
+      .star-glow { fill: #4CAF50; opacity: 0.4; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect class="star-bg" width="32" height="32" rx="4"/>
+
+  <!-- Central star with glow -->
+  <circle class="star-glow" cx="16" cy="16" r="12"/>
+  <polygon class="star-point" points="16,6 18.5,12 25,12 20,16 22,22 16,18 10,22 12,16 7,12 13.5,12"/>
+
+  <!-- Surrounding stars -->
+  <circle class="star-point" cx="6" cy="8" r="0.8"/>
+  <circle class="star-point" cx="26" cy="10" r="0.6"/>
+  <circle class="star-point" cx="28" cy="24" r="0.5"/>
+  <circle class="star-point" cx="5" cy="26" r="0.6"/>
+</svg>

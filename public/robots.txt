@@ -1,0 +1,14 @@
+# Star - AR Star Map
+# https://www.star-ar-map.com
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.star-ar-map.com/sitemap.xml
+
+# Disallow common paths that shouldn't be indexed
+Disallow: /api/
+Disallow: /_next/
+Disallow: /service-worker.js
+Disallow: /manifest.json
