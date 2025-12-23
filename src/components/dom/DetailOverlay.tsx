@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useStarStore } from '@/lib/store'
+import { useStarStore, type StarStoreState } from '@/lib/store'
 import type { CelestialBodyData } from '@/lib/store'
 import styles from './DetailOverlay.module.css'
 
@@ -34,10 +34,10 @@ import styles from './DetailOverlay.module.css'
  * ```
  */
 export function DetailOverlay() {
-  const selectedBody = useStarStore((state) => state.selectedBody)
-  const clearSelection = useStarStore((state) => state.clearSelection)
-  const toggleFavorite = useStarStore((state) => state.toggleFavorite)
-  const favorites = useStarStore((state) => state.favorites)
+  const selectedBody = useStarStore((state: StarStoreState) => state.selectedBody)
+  const clearSelection = useStarStore((state: StarStoreState) => state.clearSelection)
+  const toggleFavorite = useStarStore((state: StarStoreState) => state.toggleFavorite)
+  const favorites = useStarStore((state: StarStoreState) => state.favorites)
   const [isVisible, setIsVisible] = useState(false)
   const [shareStatus, setShareStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
@@ -53,7 +53,7 @@ export function DetailOverlay() {
 
   // Check if current body is favorited
   const isFavorite = selectedBody
-    ? favorites.some((fav) => fav.name === selectedBody.name && fav.type === selectedBody.type)
+    ? favorites.some((fav: CelestialBodyData) => fav.name === selectedBody.name && fav.type === selectedBody.type)
     : false
 
   // Toggle favorite status

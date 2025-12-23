@@ -6,7 +6,7 @@ import { Mesh, Vector3 } from 'three'
 import * as Astronomy from 'astronomy-engine'
 import { useGPS } from '@/hooks/useGPS'
 import { getPlanetPosition, raDecToCartesian } from '@/lib/astronomy'
-import { useStarStore } from '@/lib/store'
+import { useStarStore, type StarStoreState } from '@/lib/store'
 
 /**
  * Planets Component (HP-8)
@@ -143,7 +143,7 @@ function Planet({ position, color, size, onClick }: PlanetProps) {
  */
 export default function Planets() {
   const { latitude, longitude } = useGPS()
-  const selectCelestialBody = useStarStore((state) => state.selectCelestialBody)
+  const selectCelestialBody = useStarStore((state: StarStoreState) => state.selectCelestialBody)
   const frameCountRef = useRef(0)
   const [planetPositions, setPlanetPositions] = useState<
     Map<Astronomy.Body, Vector3>
