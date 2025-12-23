@@ -38,6 +38,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 ::-webkit-scrollbar {
   width: 8px;
@@ -54,4 +66,45 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+/* Accessibility: Focus indicators */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* High contrast focus for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Skip link styles */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  z-index: 9999;
+  padding: 1rem 2rem;
+  background-color: #1e293b;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  border: 2px solid #3b82f6;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 1rem !important;
+  top: 1rem !important;
+}
+
+/* Ensure main content landmark exists */
+#main-content {
+  scroll-margin-top: 2rem;
 }

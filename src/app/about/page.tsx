@@ -39,8 +39,8 @@ export default function AboutPage() {
         </header>
 
         {/* Mission Section */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Our Mission</h2>
+        <section className={styles.section} aria-labelledby="mission-heading">
+          <h2 id="mission-heading" className={styles.sectionTitle}>Our Mission</h2>
           <p className={styles.text}>
             Star is an open-source web-based augmented reality star map designed to make astronomy
             accessible to everyone. By combining your device&apos;s GPS and orientation sensors with
@@ -55,8 +55,8 @@ export default function AboutPage() {
         </section>
 
         {/* Technology Section */}
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Technology Stack</h2>
+        <section className={styles.section} aria-labelledby="tech-heading">
+          <h2 id="tech-heading" className={styles.sectionTitle}>Technology Stack</h2>
           <p className={styles.text}>
             Star is built with cutting-edge web technologies to deliver a smooth 60 FPS AR
             experience on mobile devices:

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Navigation from '@/components/dom/Navigation'
+import { SkipLink } from '@/components/dom/SkipLink'
 
 export const metadata: Metadata = {
   title: 'Star - AR Star Map',
@@ -24,8 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <SkipLink />
         <Navigation />
-        {children}
+        <main id="main-content" role="main">
+          {children}
+        </main>
       </body>
     </html>
   )
