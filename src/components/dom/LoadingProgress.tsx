@@ -159,7 +159,7 @@ export const LoadingProgress = ({ stage, onComplete }: LoadingProgressProps) => 
           marginTop: spacing.xl,
         }}
       >
-        {LOADING_STAGES.slice(0, -1).map((s, index) => (
+        {LOADING_STAGES.slice(0, -1).map((s) => (
           <div
             key={s.id}
             style={{

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CompatibilityWarning } from './CompatibilityWarning';
-import { getBrowserCapabilities } from '@/lib/utils/browserDetection';
 
 export interface ARLaunchButtonProps {
   children: React.ReactNode;
@@ -25,9 +24,6 @@ export const ARLaunchButton = ({
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-
-    // Check browser compatibility
-    const capabilities = getBrowserCapabilities();
 
     // Always show warning for feature detection
     setShowWarning(true);

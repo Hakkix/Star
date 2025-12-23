@@ -3,6 +3,11 @@
  * Detects browser capabilities required for the AR star map
  */
 
+// Type for iOS 13+ DeviceOrientationEvent with requestPermission
+interface DeviceOrientationEventiOS extends DeviceOrientationEvent {
+  requestPermission?: () => Promise<'granted' | 'denied'>;
+}
+
 export interface BrowserCapabilities {
   hasGeolocation: boolean;
   hasDeviceOrientation: boolean;
@@ -49,7 +54,7 @@ export const hasWebGL = (): boolean => {
     const gl =
       canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     return !!gl;
-  } catch (e) {
+  } catch {
     return false;
   }
 };
@@ -106,7 +111,7 @@ export const needsOrientationPermission = (): boolean => {
 
   return (
     typeof DeviceOrientationEvent !== 'undefined' &&
-    typeof (DeviceOrientationEvent as any).requestPermission === 'function'
+    typeof (DeviceOrientationEvent as unknown as DeviceOrientationEventiOS).requestPermission === 'function'
   );
 };
 
