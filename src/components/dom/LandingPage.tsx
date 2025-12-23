@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
 import FAQ from './FAQ'
 import SocialProof from './SocialProof'
+import { ARLaunchLink } from './ARLaunchButton'
 import styles from './LandingPage.module.css'
 
 // Animated counter component for statistics
@@ -192,12 +192,12 @@ export default function LandingPage() {
             </span>
           </p>
           <div className={styles.heroButtons}>
-            <Link href="/ar" className={styles.primaryButton}>
+            <ARLaunchLink className={styles.primaryButton}>
               <span>Launch AR Experience</span>
               <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
-            </Link>
+            </ARLaunchLink>
             <a href="#features" className={styles.secondaryButton}>
               Learn More
             </a>
@@ -373,12 +373,12 @@ export default function LandingPage() {
           <p className={styles.ctaDescription}>
             The universe is waiting. Start your journey through the cosmos.
           </p>
-          <Link href="/ar" className={styles.ctaButton}>
+          <ARLaunchLink className={styles.ctaButton}>
             <span>Launch AR Experience</span>
             <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
-          </Link>
+          </ARLaunchLink>
         </div>
       </section>
 
