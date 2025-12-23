@@ -153,9 +153,15 @@ export function parseTLE(name: string, line1: string, line2: string): ParsedTLE 
   const argumentOfPerigee = parseFloat(line2.substring(34, 42).trim());
   const meanAnomaly = parseFloat(line2.substring(43, 51).trim());
 
-  // Mean motion might have a space before it, so parse from position 52 onwards and trim
-  const meanMotionStr = line2.substring(52, 63).trim();
-  const meanMotion = meanMotionStr.length > 0 ? parseFloat(meanMotionStr) : 0;
+  // Mean motion is in columns 53-63. Try both interpretations of formatting
+  let meanMotionStr = line2.substring(52, 63).trim();
+  let meanMotion = meanMotionStr.length > 0 ? parseFloat(meanMotionStr) : 0;
+
+  // If parsing failed or got unreasonable value, try position 53-64
+  if (!meanMotion || meanMotion < 10 || meanMotion > 20) {
+    meanMotionStr = line2.substring(53, 64).trim();
+    meanMotion = meanMotionStr.length > 0 ? parseFloat(meanMotionStr) : 0;
+  }
 
   const revolutionNumber = parseInt(line2.substring(63, 68).trim(), 10);
 

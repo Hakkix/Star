@@ -66,7 +66,10 @@ export function DetailOverlay() {
   const handleShare = async () => {
     if (!selectedBody) return
 
-    const shareText = `${selectedBody.name} (${selectedBody.type})\nRA: ${selectedBody.ra.toFixed(4)}h, Dec: ${selectedBody.dec.toFixed(4)}°\n${selectedBody.dist ? `Distance: ${selectedBody.type === 'planet' ? selectedBody.dist.toFixed(3) + ' AU' : selectedBody.dist.toFixed(1) + ' ly'}` : ''}`
+    const coordinates = selectedBody.ra !== undefined && selectedBody.dec !== undefined
+      ? `\nRA: ${selectedBody.ra.toFixed(4)}h, Dec: ${selectedBody.dec.toFixed(4)}°`
+      : ''
+    const shareText = `${selectedBody.name} (${selectedBody.type})${coordinates}\n${selectedBody.dist ? `Distance: ${formatDistance(selectedBody.dist, selectedBody.type)}` : ''}`
 
     try {
       await navigator.clipboard.writeText(shareText)
@@ -99,6 +102,9 @@ export function DetailOverlay() {
         Neptune: 'The most distant planet from the Sun, Neptune is an ice giant known for its deep blue color and supersonic winds.',
       }
       return descriptions[body.name] || 'A celestial body in our Solar System.'
+    } else if (body.type === 'satellite') {
+      // Satellite description
+      return 'An artificial satellite orbiting Earth, currently visible in the night sky from this location.'
     } else {
       // Generic star description
       if (body.mag !== undefined && body.mag < 1) {
@@ -156,11 +162,13 @@ export function DetailOverlay() {
     return `${sign}${degrees}° ${minutes}' ${seconds}"`
   }
 
-  const formatDistance = (dist?: number, type?: 'star' | 'planet'): string => {
+  const formatDistance = (dist?: number, type?: 'star' | 'planet' | 'satellite'): string => {
     if (!dist) return 'Unknown'
-    // Planets are in AU, stars are in light-years
+    // Planets are in AU, stars are in light-years, satellites are in km
     if (type === 'planet') {
       return `${dist.toFixed(3)} AU`
+    } else if (type === 'satellite') {
+      return `${dist.toFixed(0)} km`
     }
     return `${dist.toFixed(1)} light-years`
   }
@@ -307,16 +315,20 @@ export function DetailOverlay() {
             </div>
 
             {/* Right Ascension */}
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Right Ascension</span>
-              <span className={styles.infoValue}>{formatRA(selectedBody.ra)}</span>
-            </div>
+            {selectedBody.ra !== undefined && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Right Ascension</span>
+                <span className={styles.infoValue}>{formatRA(selectedBody.ra)}</span>
+              </div>
+            )}
 
             {/* Declination */}
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Declination</span>
-              <span className={styles.infoValue}>{formatDec(selectedBody.dec)}</span>
-            </div>
+            {selectedBody.dec !== undefined && (
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Declination</span>
+                <span className={styles.infoValue}>{formatDec(selectedBody.dec)}</span>
+              </div>
+            )}
           </div>
         </div>
 
