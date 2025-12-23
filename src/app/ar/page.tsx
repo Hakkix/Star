@@ -12,6 +12,7 @@ import { HelpButton } from '@/components/dom/HelpButton'
 import { ARControls } from '@/components/dom/ARControls'
 import { FavoritesPanel } from '@/components/dom/FavoritesPanel'
 import { PerformanceStats } from '@/components/dom/PerformanceStats'
+import { SensorDebug } from '@/components/dom/SensorDebug'
 import { useStarStore } from '@/lib/store'
 import type { RendererStats } from '@/hooks/useRendererStats'
 
@@ -211,6 +212,9 @@ export default function ARExperience() {
       <PerformanceStats
         onRendererStatsUpdate={(callback) => setRendererStatsCallback(() => callback)}
       />
+
+      {/* Sensor & GPS Debug - Dev mode only */}
+      <SensorDebug />
     </>
   )
 }
