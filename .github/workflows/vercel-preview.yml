@@ -263,75 +263,101 @@ jobs:
               console.log('Checking for Lighthouse results...');
               console.log('Current working directory:', process.cwd());
 
-              // Check for .lighthouseci directory
-              const lighthouseDir = path.join(process.cwd(), '.lighthouseci');
-              console.log('Looking for directory:', lighthouseDir);
+              let lhr = null;
+              let reportUrl = null;
 
-              if (!fs.existsSync(lighthouseDir)) {
-                console.error('Directory does not exist:', lighthouseDir);
-                console.log('Directory contents:', fs.readdirSync(process.cwd()));
-                throw new Error('.lighthouseci directory not found');
+              // Method 1: Try to get results from the manifest file
+              const manifestPath = path.join(process.cwd(), '.lighthouseci', 'manifest.json');
+              if (fs.existsSync(manifestPath)) {
+                console.log('Found manifest.json, attempting to parse...');
+                const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+                if (manifest && manifest.length > 0 && manifest[0].jsonPath) {
+                  const lhrPath = path.join(process.cwd(), '.lighthouseci', manifest[0].jsonPath);
+                  if (fs.existsSync(lhrPath)) {
+                    console.log('Reading LHR file from manifest:', lhrPath);
+                    lhr = JSON.parse(fs.readFileSync(lhrPath, 'utf8'));
+                  }
+                }
               }
 
-              const files = fs.readdirSync(lighthouseDir);
-              console.log('Files in .lighthouseci:', files);
+              // Method 2: Try to find LHR files directly in .lighthouseci directory
+              if (!lhr) {
+                const lighthouseDir = path.join(process.cwd(), '.lighthouseci');
+                console.log('Looking for .lighthouseci directory:', lighthouseDir);
 
-              if (files.length === 0) {
-                throw new Error('.lighthouseci directory is empty');
+                if (fs.existsSync(lighthouseDir)) {
+                  const files = fs.readdirSync(lighthouseDir);
+                  console.log('Files in .lighthouseci:', files);
+
+                  // Find the JSON result files (lhr-*.json format)
+                  const lhrFiles = files.filter(f => f.startsWith('lhr-') && f.endsWith('.json'));
+                  console.log('Found LHR files:', lhrFiles);
+
+                  if (lhrFiles.length > 0) {
+                    // Read the first LHR file (they should all be for the same URL)
+                    const lhrPath = path.join(lighthouseDir, lhrFiles[0]);
+                    console.log('Reading LHR file:', lhrPath);
+                    lhr = JSON.parse(fs.readFileSync(lhrPath, 'utf8'));
+                  }
+                } else {
+                  console.log('⚠️  .lighthouseci directory not found');
+                  console.log('Directory contents:', fs.readdirSync(process.cwd()).join(', '));
+                }
               }
 
-              // Find the JSON result files (lhr-*.json format)
-              const lhrFiles = files.filter(f => f.startsWith('lhr-') && f.endsWith('.json'));
-              console.log('Found LHR files:', lhrFiles);
+              // If we found results, parse them
+              if (lhr && lhr.categories) {
+                console.log('✅ LHR file parsed successfully');
 
-              if (lhrFiles.length === 0) {
-                throw new Error('No Lighthouse result files found');
+                const perfScore = Math.round((lhr.categories.performance?.score || 0) * 100);
+                const a11yScore = Math.round((lhr.categories.accessibility?.score || 0) * 100);
+                const bpScore = Math.round((lhr.categories['best-practices']?.score || 0) * 100);
+                const seoScore = Math.round((lhr.categories.seo?.score || 0) * 100);
+
+                // Build the results message
+                lighthouseResults = '## 🏆 Lighthouse Scores\n\n';
+                lighthouseResults += '- ⚡ Performance: ' + perfScore + '\n';
+                lighthouseResults += '- ♿ Accessibility: ' + a11yScore + '\n';
+                lighthouseResults += '- ✅ Best Practices: ' + bpScore + '\n';
+                lighthouseResults += '- 🔍 SEO: ' + seoScore + '\n\n';
+
+                // Try to get the report URL from action outputs
+                const outputLinks = '${{ steps.lighthouse.outputs.links }}';
+                const outputManifest = '${{ steps.lighthouse.outputs.manifest }}';
+
+                if (outputLinks && outputLinks !== '' && !outputLinks.includes('{{')) {
+                  reportUrl = outputLinks;
+                } else if (outputManifest && outputManifest !== '' && !outputManifest.includes('{{')) {
+                  reportUrl = outputManifest;
+                } else if (lhr.finalUrl) {
+                  reportUrl = lhr.finalUrl;
+                }
+
+                if (reportUrl) {
+                  lighthouseResults += '🔗 [View Full Report](' + reportUrl + ')\n\n';
+                }
+
+                lighthouseResults += '📊 [Workflow Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})';
+              } else {
+                // No results found - provide helpful message
+                throw new Error('Could not find Lighthouse results. The .lighthouseci directory or results files were not created.');
               }
-
-              // Read the first LHR file (they should all be for the same URL)
-              const lhrPath = path.join(lighthouseDir, lhrFiles[0]);
-              console.log('Reading LHR file:', lhrPath);
-
-              const lhrContent = fs.readFileSync(lhrPath, 'utf8');
-              const lhr = JSON.parse(lhrContent);
-
-              console.log('LHR file parsed successfully');
-
-              // Extract scores from categories
-              const categories = lhr.categories;
-              if (!categories) {
-                throw new Error('No categories found in Lighthouse results');
-              }
-
-              const perfScore = Math.round((categories.performance?.score || 0) * 100);
-              const a11yScore = Math.round((categories.accessibility?.score || 0) * 100);
-              const bpScore = Math.round((categories['best-practices']?.score || 0) * 100);
-              const seoScore = Math.round((categories.seo?.score || 0) * 100);
-
-              // Get the URL from action outputs if available
-              const reportUrl = '${{ steps.lighthouse.outputs.links }}' ||
-                               lhr.finalUrl ||
-                               '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
-
-              lighthouseResults = '## 🏆 Lighthouse Scores\n\n';
-              lighthouseResults += '- ⚡ Performance: ' + perfScore + '\n';
-              lighthouseResults += '- ♿ Accessibility: ' + a11yScore + '\n';
-              lighthouseResults += '- ✅ Best Practices: ' + bpScore + '\n';
-              lighthouseResults += '- 🔍 SEO: ' + seoScore + '\n\n';
-
-              if (reportUrl && reportUrl !== '${{ steps.lighthouse.outputs.links }}') {
-                lighthouseResults += '🔗 [View Full Report](' + reportUrl + ')\n\n';
-              }
-
-              lighthouseResults += '📊 [Workflow Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})';
 
             } catch (error) {
-              console.error('Error parsing Lighthouse results:', error);
-              console.error('Stack trace:', error.stack);
+              console.error('❌ Error parsing Lighthouse results:', error.message);
+              if (error.stack) {
+                console.error('Stack trace:', error.stack);
+              }
 
-              lighthouseResults = '⚠️ Could not parse Lighthouse results\n\n';
-              lighthouseResults += 'Error: ' + error.message + '\n\n';
-              lighthouseResults += 'Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.';
+              // Provide a helpful error message
+              lighthouseResults = '## ⚠️ Lighthouse Performance Check\n\n';
+              lighthouseResults += 'Could not parse Lighthouse results.\n\n';
+              lighthouseResults += '**Error**: ' + error.message + '\n\n';
+              lighthouseResults += 'This can happen if:\n';
+              lighthouseResults += '- The Lighthouse CI step failed to run\n';
+              lighthouseResults += '- The deployment URL was not accessible\n';
+              lighthouseResults += '- The results were uploaded but not stored locally\n\n';
+              lighthouseResults += '📊 Check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more details.';
             }
 
             github.rest.issues.createComment({
