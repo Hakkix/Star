@@ -110,13 +110,16 @@ jobs:
         run: npm ci
 
       - name: Build Next.js app
+        id: build
         run: npm run build
 
       - name: Verify build output
+        id: verify-build
         if: success()
         run: |
           if [ ! -d ".next" ]; then
             echo "Error: .next directory not found after build"
+            echo "build_artifacts_exist=false" >> $GITHUB_OUTPUT
             exit 1
           fi
 
@@ -126,19 +129,21 @@ jobs:
           # Check if .next has content
           if [ -z "$(ls -A .next/)" ]; then
             echo "Error: .next directory is empty"
+            echo "build_artifacts_exist=false" >> $GITHUB_OUTPUT
             exit 1
           fi
 
           echo "✅ Build output verified successfully"
+          echo "build_artifacts_exist=true" >> $GITHUB_OUTPUT
 
       - name: Upload build artifacts
-        if: success()
+        if: success() && steps.verify-build.outputs.build_artifacts_exist == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: .next
           retention-days: 7
-          if-no-files-found: error
+          if-no-files-found: warn
 
   e2e:
     name: E2E Tests
@@ -166,7 +171,9 @@ jobs:
         run: npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Download build artifacts
+        id: download-artifacts
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: build-output
           path: .next
@@ -175,6 +182,7 @@ jobs:
         run: |
           if [ ! -d ".next" ]; then
             echo "Error: .next directory not found after download"
+            echo "This can happen if the build job didn't create artifacts."
             exit 1
           fi
 
