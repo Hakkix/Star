@@ -169,24 +169,44 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: .next
 
-      - name: Verify downloaded build artifacts
+      - name: Verify and prepare build artifacts
         run: |
-          if [ ! -d ".next" ]; then
-            echo "Error: .next directory not found after download"
+          echo "Checking downloaded artifact structure..."
+          ls -la
+
+          # Download artifact creates a directory with the artifact name
+          if [ -d "build-output" ]; then
+            echo "Found build-output directory from artifact download"
+            ls -la build-output/
+
+            # Move contents to .next directory
+            mv build-output .next
+            echo "Moved build-output to .next"
+          elif [ -d ".next" ]; then
+            echo "Found .next directory directly"
+            ls -la .next/
+          else
+            echo "Error: Neither build-output nor .next directory found after download"
+            echo "Current directory contents:"
+            ls -la
             exit 1
           fi
 
-          echo "Downloaded build artifacts:"
-          ls -la .next/
+          # Verify .next directory exists and has content
+          if [ ! -d ".next" ]; then
+            echo "Error: .next directory not found after processing"
+            exit 1
+          fi
 
           if [ -z "$(ls -A .next/)" ]; then
-            echo "Error: .next directory is empty after download"
+            echo "Error: .next directory is empty"
             exit 1
           fi
 
           echo "✅ Build artifacts verified successfully"
+          echo "Final .next directory contents:"
+          ls -la .next/
 
       - name: Run E2E tests
         run: npx playwright test --project=${{ matrix.browser }}
