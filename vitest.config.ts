@@ -25,6 +25,16 @@ export default defineConfig({
       '**/coverage/**',
     ],
 
+    // Limit concurrent tests to prevent memory issues with Three.js/WebGL
+    maxConcurrency: 5,
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: false,
+        maxForks: 3,
+      },
+    },
+
     // Coverage configuration
     coverage: {
       provider: 'v8',
@@ -53,9 +63,6 @@ export default defineConfig({
 
     // Test timeout (3D rendering can be slow)
     testTimeout: 10000,
-
-    // Run tests in parallel
-    pool: 'threads',
   },
 
   resolve: {
@@ -67,5 +74,7 @@ export default defineConfig({
       '@/lib': path.resolve(__dirname, './src/lib'),
       '@/data': path.resolve(__dirname, './src/data'),
     },
+    // Deduplicate three.js to prevent multiple instances
+    dedupe: ['three', '@react-three/fiber', '@react-three/drei'],
   },
 });

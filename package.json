@@ -9,10 +9,10 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage",
+    "test": "node --max-old-space-size=4096 ./node_modules/vitest/vitest.mjs run",
+    "test:watch": "node --max-old-space-size=4096 ./node_modules/vitest/vitest.mjs",
+    "test:ui": "node --max-old-space-size=4096 ./node_modules/vitest/vitest.mjs --ui",
+    "test:coverage": "node --max-old-space-size=4096 ./node_modules/vitest/vitest.mjs run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
@@ -50,7 +50,11 @@
   "engines": {
     "node": ">=18.17.0"
   },
+  "resolutions": {
+    "three": "0.163.0"
+  },
   "overrides": {
-    "glob": "^11.0.0"
+    "glob": "^11.0.0",
+    "three": "0.163.0"
   }
 }

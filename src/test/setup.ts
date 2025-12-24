@@ -10,6 +10,12 @@ import { afterEach, beforeAll, vi } from 'vitest';
 // Cleanup after each test case (e.g., clearing jsdom)
 afterEach(() => {
   cleanup();
+
+  // Clean up Three.js WebGL contexts to prevent memory leaks
+  // This is critical for tests that create Canvas/WebGL contexts
+  if (global.gc) {
+    global.gc();
+  }
 });
 
 // Mock window.matchMedia (used by some UI libraries)
